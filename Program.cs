@@ -58,9 +58,11 @@ namespace LibraryManagement
                 try
                 {
                     List<string> fetchedData = getUserData(userName);
-                    string previousBookCollected = fetchedData[1];
-
-                    Console.WriteLine("\nYou previously collected " + previousBookCollected);
+                    Console.WriteLine("\nYou previously downloaded:  \n");
+                    for (int i = 1; i < fetchedData.Count; i++)
+                    {
+                        Console.WriteLine(i + ". "+ fetchedData[i]);
+                    }                    
                 }
                 catch (Exception ex)
                 {
@@ -83,7 +85,7 @@ namespace LibraryManagement
 
             do
             {
-                response = Intro("\nWould you like to borrow a book: ");
+                response = Intro("\nWould you like to download a book: ");
                 try
                 {
                     DisplayResponse(response);
@@ -144,7 +146,7 @@ namespace LibraryManagement
         {
             Book book = new Book();
             //Dictionary<string, Book> allBooks;
-            if (response == userOption.yes.ToString())
+            if (response.ToLower() == userOption.yes.ToString())
             {
                 book.DisplayBooks();
             }
@@ -198,7 +200,7 @@ namespace LibraryManagement
         //}
 
        // [Serializable]
-        static  List<string> getUserData( string user)
+       public static  List<string> getUserData( string user)
         {
             //handle missing file here
             string fileName = user + ".bin";

@@ -75,10 +75,29 @@ namespace LibraryManagement
             } while (result.Trim() == "");
             return result;
         }
+
+        public static string readBookString(string prompt)
+        {
+            string result;
+            do
+            {
+                Console.Write(prompt);
+                result = Console.ReadLine();
+                while (result.Length < 3)
+                {
+                    Console.WriteLine("Please enter a word with at least 3 characters!!!");
+                    Console.Write(prompt);
+                    result = Console.ReadLine();
+
+                }
+            } while (result.Trim() == "");
+            return result;
+        }
         public void BorrowBook(Dictionary<string, Book> books)
         {
             string samplefileUrl = "https://www.africau.edu/images/default/sample.pdf";
-            string booktitle = readString("\nPlease enter the title of the book you want to borrow: ");
+            string booktitle = readBookString("\nPlease search for a book by its title: ");
+
             //get a list of all keys and convert to lower case
             List<string> bookKeys = new List<string>(books.Keys);
             List<string> matchingRecords = new List<string>();
@@ -131,7 +150,7 @@ namespace LibraryManagement
             }
             else
             {
-                Console.WriteLine("There are no matches for your request");
+                Console.WriteLine("\nThere are no matches for your request");
                 DisplayBooks();
 
             }
@@ -164,9 +183,27 @@ namespace LibraryManagement
             string fileName = dataList[1];           
             string binFile = userName + ".bin";
             BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Create(binFile);
-            bf.Serialize(file, dataList);
-            file.Close();
+
+            //deserialie the previous records and add the new record to it, if it exist
+            if (File.Exists(binFile))
+            {
+                var allData = Program.getUserData(userName);
+                allData.Add(fileName);
+                List<string> distinctData = allData.Distinct().ToList();
+                FileStream file = File.Create(binFile);
+                bf.Serialize(file, distinctData);
+                file.Close();
+            }
+            else
+            {
+                FileStream file = File.Create(binFile);
+                bf.Serialize(file, dataList);
+                file.Close();
+            }
+            //FileStream file = File.Create(binFile);         
+
+            //bf.Serialize(file, dataList);
+            //file.Close();
         }
 
         public void DisplayBooks()
@@ -175,12 +212,14 @@ namespace LibraryManagement
             allBooks = this.GetAllBooks();
             if (allBooks.Count > 0)
             {
-                Console.WriteLine("\nThese are the available books with authors, you can borrow one book at a time\n");
+                Console.WriteLine("\nThese are the available books with authors, you can download one book at a time\n");
                 //order in ascending 
                 List<Book> bookList = new List<Book>(allBooks.Values).OrderBy(x => x.title).ToList();
+
+                Console.WriteLine("Book Title                  |    Author");
                 for (int i = 0; i < bookList.Count; i++)
                 {
-                    Console.WriteLine((i + 1) + ". " + bookList[i].title + " by " + bookList[i].author);
+                    Console.WriteLine((i + 1) + ". " + bookList[i].title + "| by " + bookList[i].author);
                 }
                 BorrowBook(allBooks);
             }
