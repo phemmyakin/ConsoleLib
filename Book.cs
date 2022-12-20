@@ -85,7 +85,7 @@ namespace LibraryManagement
                 result = Console.ReadLine();
                 while (result.Length < 3)
                 {
-                    Console.WriteLine("Please enter a word with at least 3 characters!!!");
+                    Console.WriteLine("\nPlease enter a word with at least 3 characters!!!");
                     Console.Write(prompt);
                     result = Console.ReadLine();
 
