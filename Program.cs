@@ -16,16 +16,13 @@ namespace LibraryManagement
         static void Main(string[] args)
         {
             bool userExist = false;
-              string u = "";
+              string message = "";
         string[] allUsers = getUsers();
             string response;
             Console.WriteLine("Welcome to HOE public library!!! ");
             const string welcomeNote = "\nPlease enter your unique username:";
             string userName = readString(welcomeNote);
             globalUser = userName;
-            //Person person = new Person();  
-         
-            //person.savePerson(userName);
 
             foreach (string user in allUsers)
             {
@@ -34,11 +31,11 @@ namespace LibraryManagement
                     userExist = true;
                 }
             }
-            //var cc = person.getPerson();
             if (!userExist)
             {
                 // ask for the user first name and last name
                 saveUser(userName);
+                message = "\nWould you like to download a book: ";
                 //do all other stuff
                 //try
                 //{
@@ -62,7 +59,8 @@ namespace LibraryManagement
                     for (int i = 1; i < fetchedData.Count; i++)
                     {
                         Console.WriteLine(i + ". "+ fetchedData[i]);
-                    }                    
+                    }
+                    message = "\nWould you like to download another book: ";
                 }
                 catch (Exception ex)
                 {
@@ -75,17 +73,13 @@ namespace LibraryManagement
                     Console.WriteLine("Sorry, I could not fetch your records, the file could be missing/corrupted");
                  
                 }
-
-                //List<string>fetchedData = getUserData(userName);
-                //string previousBookCollected = fetchedData[1];
-
                 //Console.WriteLine("\nYou previously collected "+previousBookCollected);
                
             }
 
             do
             {
-                response = Intro("\nWould you like to download a book: ");
+                response = Intro(message);
                 try
                 {
                     DisplayResponse(response);
@@ -94,6 +88,7 @@ namespace LibraryManagement
                 {
                     Console.WriteLine(ex.Message);
                 }
+                message = "\nWould you like to download another book: ";
             } while (response != userOption.no.ToString());
 
 
