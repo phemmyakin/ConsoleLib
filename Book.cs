@@ -113,7 +113,7 @@ namespace LibraryManagement
             {
                 if (matchingRecords.Count > 1)
                 {
-                    Console.WriteLine("\nHere are the corresponding matches to your: ");
+                    Console.WriteLine("\nHere are the corresponding matches to your search: ");
                     for (int i = 0; i < matchingRecords.Count; i++)
                     {
                         Console.WriteLine((i + 1) + ". " + books[matchingRecords[i]].title + " by " + books[matchingRecords[i]].author);
@@ -124,27 +124,30 @@ namespace LibraryManagement
                         };
                         matchedBook.Add(books[matchingRecords[i]].title, newBook);
                     }
-                    //make the user select one book at a time
+                    //makes the user select one book at a time
                     BorrowBook(matchedBook);
-
                 }
                 else
                 {
                     Console.WriteLine("\nThis is the book");
                     Console.WriteLine("\n" + (1) + ". " + books[matchingRecords[0]].title + " by " + books[matchingRecords[0]].author);
                     Console.Write("\npress 1 to download or any key to view all available books again: ");
-                    string ress = Console.ReadLine();
-                    if (ress == "1")
+                    string response = Console.ReadLine();
+                    string positive = "1";
+                    if (response == positive)
                     {
                         string user = Program.globalUser;
                         downloadFile(user,samplefileUrl, books[matchingRecords[0]].title);
                         Console.WriteLine("\n" + books[matchingRecords[0]].title + " downloaded successfully.");
+                        //Console.WriteLine("\n You have successfully downloaded the following books");
+                        string displayMessage = "\n You have successfully downloaded the following books";
+                        Program.DisplayUserHistory(user, displayMessage);
+
                     }
                     else
                     {
                         DisplayBooks();
                     }
-
                 }
 
             }
@@ -185,21 +188,31 @@ namespace LibraryManagement
             BinaryFormatter bf = new BinaryFormatter();
 
             //deserialie the previous records and add the new record to it, if it exist
-            if (File.Exists(binFile))
+
+            try
             {
-                var allData = Program.getUserData(userName);
-                allData.Add(fileName);
-                List<string> distinctData = allData.Distinct().ToList();
-                FileStream file = File.Create(binFile);
-                bf.Serialize(file, distinctData);
-                file.Close();
+                if (File.Exists(binFile))
+                {
+                    var allData = Program.getUserData(userName);
+                    allData.Add(fileName);
+                    List<string> distinctData = allData.Distinct().ToList();
+                    FileStream file = File.Create(binFile);
+                    bf.Serialize(file, distinctData);
+                    file.Close();
+                }
+                else
+                {
+                    FileStream file = File.Create(binFile);
+                    bf.Serialize(file, dataList);
+                    file.Close();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                FileStream file = File.Create(binFile);
-                bf.Serialize(file, dataList);
-                file.Close();
+
+                Console.WriteLine(ex.Message);
             }
+            
             //FileStream file = File.Create(binFile);         
 
             //bf.Serialize(file, dataList);

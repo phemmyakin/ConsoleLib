@@ -16,8 +16,8 @@ namespace LibraryManagement
         static void Main(string[] args)
         {
             bool userExist = false;
-              string message = "";
-        string[] allUsers = getUsers();
+            string userQuestion = "";
+            string[] allUsers = getUsers();
             string response;
             Console.WriteLine("Welcome to HOE public library!!! ");
             const string welcomeNote = "\nPlease enter your unique username:";
@@ -35,7 +35,7 @@ namespace LibraryManagement
             {
                 // ask for the user first name and last name
                 saveUser(userName);
-                message = "\nWould you like to download a book: ";
+                userQuestion = "\nWould you like to download a book: ";
                 //do all other stuff
                 //try
                 //{
@@ -54,29 +54,34 @@ namespace LibraryManagement
                 Console.WriteLine("\nWelcome back " + userName);
                 try
                 {
-                    List<string> fetchedData = getUserData(userName);
-                    Console.WriteLine("\nYou previously downloaded:  \n");
-                    for (int i = 1; i < fetchedData.Count; i++)
-                    {
-                        Console.WriteLine(i + ". "+ fetchedData[i]);
-                    }
-                    message = "\nWould you like to download another book: ";
+                    userQuestion = "\nWould you like to download another book: ";
+                    string displayMessage = "\n You previosly downloaded the following books\n\n";
+                    DisplayUserHistory(userName, displayMessage);
                 }
                 catch (Exception ex)
                 {
-
-                    //string binFile = userName + ".bin";
-                    
-                    //FileStream file = File.Create(binFile);
-                    //file.Close();
-                    //Console.WriteLine(ex.Message);
-                    Console.WriteLine("Sorry, I could not fetch your records, the file could be missing/corrupted");
-                 
-                }
-                //Console.WriteLine("\nYou previously collected "+previousBookCollected);
-               
+                    Console.WriteLine("\nSorry, I could not fetch your records, the file could be missing/corrupted");
+                    //mainGuy(userQuestion);
+                }               
             }
+            mainGuy(userQuestion);
+            Console.ReadLine();
+        }
 
+        public static void DisplayUserHistory(string userName, string displayMessage)
+        {
+            List<string> fetchedData = getUserData(userName);
+
+            Console.WriteLine(displayMessage);
+            for (int i = 1; i < fetchedData.Count; i++)
+            {
+                Console.WriteLine(i + ". " + fetchedData[i]);
+            }
+        }
+
+        public static void mainGuy(string message)
+        {
+            string response;
             do
             {
                 response = Intro(message);
@@ -91,13 +96,7 @@ namespace LibraryManagement
                 message = "\nWould you like to download another book: ";
             } while (response != userOption.no.ToString());
 
-
-          
-
-
-            Console.ReadLine();
         }
-
         public static string Intro(string message)
         {
             string result;
@@ -140,29 +139,10 @@ namespace LibraryManagement
         public static void DisplayResponse(string response)
         {
             Book book = new Book();
-            //Dictionary<string, Book> allBooks;
             if (response.ToLower() == userOption.yes.ToString())
             {
                 book.DisplayBooks();
             }
-            //else
-            //{
-            //    response = readString("Would you like to return a book: ");
-            //    while (!validateResponse(response))
-            //    {
-            //        Console.WriteLine("Please enter 'Yes' or 'No'");
-            //        response = readString("Would you like to return a book: ");
-            //    }
-            //    if (response == userOption.yes.ToString())
-            //    {
-
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine("How can i help you?");
-            //    }
-            //}
-
         }
 
         static void saveUser(string userName)
@@ -183,21 +163,9 @@ namespace LibraryManagement
             return dd;
         }
 
-
-        //serilaize portion
-        //static void saveUserData(List<string> array)
-        //{
-        //    string binFile = array + ".bin";
-        //    BinaryFormatter bf = new BinaryFormatter();
-        //    FileStream file = File.Create(binFile);
-        //    bf.Serialize(file, array);
-        //    file.Close();
-        //}
-
-       // [Serializable]
        public static  List<string> getUserData( string user)
         {
-            //handle missing file here
+            //handle missing file here and catch the exception
             string fileName = user + ".bin";
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.OpenRead(fileName);
@@ -207,27 +175,13 @@ namespace LibraryManagement
                 file.Close();
                 return array;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 file.Close();
+                //Console.WriteLine(ex.Message);
                 throw;
             }
          
         }
     }
-
-    //public class Person
-    //{
-    //    public string userName { get; set; }
-       
-    //    public string getPerson()
-    //    {            
-    //        return this.userName;
-    //    }
-    //    public void savePerson(string _userName)
-    //    {
-    //        this.userName = _userName;
-            
-    //    }
-    //}
 }
