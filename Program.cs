@@ -17,11 +17,10 @@ namespace LibraryManagement
         {
             bool userExist = false;
             string userQuestion = "";
-            string[] allUsers = getUsers();
-            string response;
-            Console.WriteLine("Welcome to HOE public library!!! ");
-            const string welcomeNote = "\nPlease enter your unique username:";
-            string userName = readString(welcomeNote);
+            string[] allUsers = GetAllUsers();
+            Console.WriteLine("  Welcome to HOE public library!!! ");
+            const string welcomeNote = "\n  Please enter your unique username:";
+            string userName = ReadString(welcomeNote);
             globalUser = userName;
 
             foreach (string user in allUsers)
@@ -34,43 +33,33 @@ namespace LibraryManagement
             if (!userExist)
             {
                 // ask for the user first name and last name
-                saveUser(userName);
-                userQuestion = "\nWould you like to download a book: ";
-                //do all other stuff
-                //try
-                //{
-                //    DisplayResponse(response);
-                //}
-                //catch (Exception ex)
-                //{
-                //    Console.WriteLine(ex.Message);
-                //    //recovery code should be to start over again
-                //}
+                SaveUser(userName);
+                userQuestion = "\n  Would you like to download a book: ";
             }
             else
             {
                 // recall the history of the user here and continue
-                //deserilaize the use record at this point
-                Console.WriteLine("\nWelcome back " + userName);
+                //deserialize the user record at this point
+                Console.WriteLine("\n   Welcome back " + userName);
                 try
                 {
-                    userQuestion = "\nWould you like to download another book: ";
-                    string displayMessage = "\n You previosly downloaded the following books\n\n";
+                    userQuestion = "\n  Would you like to download another book: ";
+                    string displayMessage = "\n  You previosly downloaded the following books\n\n";
                     DisplayUserHistory(userName, displayMessage);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("\nSorry, I could not fetch your records, the file could be missing/corrupted");
+                    Console.WriteLine("\n  Sorry, I could not fetch your records, the file could be missing/corrupted");
                     //mainGuy(userQuestion);
                 }               
             }
-            mainGuy(userQuestion);
+            UserRequest(userQuestion);
             Console.ReadLine();
         }
 
         public static void DisplayUserHistory(string userName, string displayMessage)
         {
-            List<string> fetchedData = getUserData(userName);
+            List<string> fetchedData = GetUserData(userName);
 
             Console.WriteLine(displayMessage);
             for (int i = 1; i < fetchedData.Count; i++)
@@ -79,12 +68,12 @@ namespace LibraryManagement
             }
         }
 
-        public static void mainGuy(string message)
+        public static void UserRequest(string message)
         {
             string response;
             do
             {
-                response = Intro(message);
+                response = GetUserResponse(message);
                 try
                 {
                     DisplayResponse(response);
@@ -97,18 +86,18 @@ namespace LibraryManagement
             } while (response != userOption.no.ToString());
 
         }
-        public static string Intro(string message)
+        public static string GetUserResponse(string message)
         {
             string result;
-            result = readString(message);
-            while (!validateResponse(result))
+            result = ReadString(message);
+            while (!ValidateResponse(result))
             {
                 Console.WriteLine("Please enter 'Yes' or 'No'");
-                result = readString(message);
+                result = ReadString(message);
             }
             return result;
         }
-        public static string readString(string prompt)
+        public static string ReadString(string prompt)
         {
             string result;
             do
@@ -119,7 +108,7 @@ namespace LibraryManagement
             return result;
         }
 
-        public static bool validateResponse(string answer)
+        public static bool ValidateResponse(string answer)
         {
             if (answer.ToLower() == userOption.yes.ToString())
             {
@@ -145,7 +134,7 @@ namespace LibraryManagement
             }
         }
 
-        static void saveUser(string userName)
+        static void SaveUser(string userName)
         {
             string path = "../../asset/userList.txt";
             var cc = File.OpenWrite(path);
@@ -154,7 +143,7 @@ namespace LibraryManagement
             writer.WriteLine(userName);
             writer.Close();
         }
-        static string[] getUsers()
+        static string[] GetAllUsers()
         {
             string path = "../../asset/userList.txt";
             var cc = File.OpenWrite(path);
@@ -163,10 +152,10 @@ namespace LibraryManagement
             return dd;
         }
 
-       public static  List<string> getUserData( string user)
+       public static  List<string> GetUserData( string userName)
         {
             //handle missing file here and catch the exception
-            string fileName = user + ".bin";
+            string fileName = userName + ".bin";
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.OpenRead(fileName);
             try

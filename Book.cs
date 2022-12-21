@@ -197,7 +197,7 @@ namespace LibraryManagement
                 {
                     try
                     {
-                        allData = Program.getUserData(userName);
+                        allData = Program.GetUserData(userName);
                     }
                     catch (Exception ex)
                     {
@@ -232,21 +232,21 @@ namespace LibraryManagement
             allBooks = this.GetAllBooks();
             if (allBooks.Count > 0)
             {
-                Console.WriteLine("\nThese are the available books with authors, you can download one book at a time\n");
+                Console.WriteLine("\n  These are the available books with authors, you can download one book at a time\n");
 
                 //Order in ascending 
                 List<Book> bookList = new List<Book>(allBooks.Values).OrderBy(x => x.title).ToList();
 
-                Console.WriteLine("Book Title                  |    Author");
+                Console.WriteLine("    Book Title                  |    Author");
                 for (int i = 0; i < bookList.Count; i++)
                 {
-                    Console.WriteLine((i + 1) + ". " + bookList[i].title + "| by " + bookList[i].author);
+                    Console.WriteLine((i + 1) + ". " + bookList[i].title + "   by " + bookList[i].author);
                 }
                 BorrowBook(allBooks);
             }
             else
             {
-                Console.WriteLine("\nThere are no books available right now");
+                Console.WriteLine("\n  There are no books available right now");
                 DisplayBooks();
             }
         }
