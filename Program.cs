@@ -170,7 +170,8 @@ namespace LibraryManagement
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.OpenRead(fileName);
             try
-            {            
+            {
+                file.Position = 0;
                 List<string> array = (List<string>)bf.Deserialize(file);
                 file.Close();
                 return array;
@@ -178,6 +179,9 @@ namespace LibraryManagement
             catch (Exception ex)
             {
                 file.Close();
+                File.Delete(fileName);
+               //FileStream newFile = File.Create(fileName);
+               // newFile.Close();
                 //Console.WriteLine(ex.Message);
                 throw;
             }

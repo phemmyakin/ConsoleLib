@@ -182,23 +182,35 @@ namespace LibraryManagement
 
         static void saveUserData(List<string> dataList)
         {
+            List<string> allData = new List<string>();
             string userName = dataList[0];
             string fileName = dataList[1];           
             string binFile = userName + ".bin";
             BinaryFormatter bf = new BinaryFormatter();
 
-            //deserialie the previous records and add the new record to it, if it exist
+            //Check if the previous record exist
+            //deserialie the previous records and add the new record to it
 
             try
             {
                 if (File.Exists(binFile))
                 {
-                    var allData = Program.getUserData(userName);
-                    allData.Add(fileName);
-                    List<string> distinctData = allData.Distinct().ToList();
-                    FileStream file = File.Create(binFile);
-                    bf.Serialize(file, distinctData);
-                    file.Close();
+                    try
+                    {
+                        allData = Program.getUserData(userName);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw;
+                    }
+                    finally
+                    {
+                        allData.Add(fileName);
+                        List<string> distinctData = allData.Distinct().ToList();
+                        FileStream file = File.Create(binFile);
+                        bf.Serialize(file, distinctData);
+                        file.Close();
+                    }
                 }
                 else
                 {
@@ -212,11 +224,6 @@ namespace LibraryManagement
 
                 Console.WriteLine(ex.Message);
             }
-            
-            //FileStream file = File.Create(binFile);         
-
-            //bf.Serialize(file, dataList);
-            //file.Close();
         }
 
         public void DisplayBooks()
@@ -226,7 +233,8 @@ namespace LibraryManagement
             if (allBooks.Count > 0)
             {
                 Console.WriteLine("\nThese are the available books with authors, you can download one book at a time\n");
-                //order in ascending 
+
+                //Order in ascending 
                 List<Book> bookList = new List<Book>(allBooks.Values).OrderBy(x => x.title).ToList();
 
                 Console.WriteLine("Book Title                  |    Author");
