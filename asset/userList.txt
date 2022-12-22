@@ -10,3 +10,6 @@ frlu
 kinko
 raph
 file
+james
+kundai
+kln

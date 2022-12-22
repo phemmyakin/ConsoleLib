@@ -13,12 +13,15 @@ namespace LibraryManagement
             no
         }
         public static string globalUser;
+        public const string formattedSpace = "  ";
         static void Main(string[] args)
         {
             bool userExist = false;
+            Book book = new Book();
             string userQuestion = "";
+           
             string[] allUsers = GetAllUsers();
-            Console.WriteLine("  Welcome to HOE public library!!! ");
+            Console.WriteLine(formattedSpace + "Welcome to HOE public library!!! ");
             const string welcomeNote = "\n  Please enter your unique username:";
             string userName = ReadString(welcomeNote);
             globalUser = userName;
@@ -34,25 +37,26 @@ namespace LibraryManagement
             {
                 // ask for the user first name and last name
                 SaveUser(userName);
-                userQuestion = "\n  Would you like to download a book: ";
+                //userQuestion = "\n  Would you like to download a book: ";
             }
             else
             {
                 // recall the history of the user here and continue
                 //deserialize the user record at this point
-                Console.WriteLine("\n   Welcome back " + userName);
+                Console.WriteLine(formattedSpace + "\nWelcome back " + userName);
                 try
                 {
-                    userQuestion = "\n  Would you like to download another book: ";
-                    string displayMessage = "\n  You previosly downloaded the following books\n\n";
+                   // userQuestion = "\n  Would you like to download another book: ";
+                    string displayMessage = "\nYou previosly downloaded the following books\n";
                     DisplayUserHistory(userName, displayMessage);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("\n  Sorry, I could not fetch your records, the file could be missing/corrupted");
-                    //mainGuy(userQuestion);
+                    Console.WriteLine(formattedSpace+"\nSorry, I could not fetch your records, the file could be missing/corrupted");            
                 }               
             }
+            userQuestion = "\nWould you like to download another book: ";
+            book.DisplayBooks();
             UserRequest(userQuestion);
             Console.ReadLine();
         }
@@ -61,10 +65,10 @@ namespace LibraryManagement
         {
             List<string> fetchedData = GetUserData(userName);
 
-            Console.WriteLine(displayMessage);
+            Console.WriteLine(formattedSpace + displayMessage);
             for (int i = 1; i < fetchedData.Count; i++)
             {
-                Console.WriteLine(i + ". " + fetchedData[i]);
+                Console.WriteLine(formattedSpace + i + ". " + fetchedData[i]);
             }
         }
 
@@ -82,7 +86,6 @@ namespace LibraryManagement
                 {
                     Console.WriteLine(ex.Message);
                 }
-                message = "\nWould you like to download another book: ";
             } while (response != userOption.no.ToString());
 
         }
@@ -92,7 +95,7 @@ namespace LibraryManagement
             result = ReadString(message);
             while (!ValidateResponse(result))
             {
-                Console.WriteLine("Please enter 'Yes' or 'No'");
+                Console.WriteLine(formattedSpace + "Please enter 'Yes' or 'No'");
                 result = ReadString(message);
             }
             return result;
@@ -102,7 +105,7 @@ namespace LibraryManagement
             string result;
             do
             {
-                Console.Write(prompt);
+                Console.Write(formattedSpace + prompt);
                 result = Console.ReadLine();
             } while (result.Trim() == "");
             return result;
@@ -146,10 +149,10 @@ namespace LibraryManagement
         static string[] GetAllUsers()
         {
             string path = "../../asset/userList.txt";
-            var cc = File.OpenWrite(path);
-            cc.Close();
-            var dd = File.ReadAllLines(path);
-            return dd;
+            FileStream stream = File.OpenWrite(path);
+            stream.Close();
+            string[] users = File.ReadAllLines(path);
+            return users;
         }
 
        public static  List<string> GetUserData( string userName)
@@ -160,7 +163,6 @@ namespace LibraryManagement
             FileStream file = File.OpenRead(fileName);
             try
             {
-                file.Position = 0;
                 List<string> array = (List<string>)bf.Deserialize(file);
                 file.Close();
                 return array;
@@ -169,9 +171,6 @@ namespace LibraryManagement
             {
                 file.Close();
                 File.Delete(fileName);
-               //FileStream newFile = File.Create(fileName);
-               // newFile.Close();
-                //Console.WriteLine(ex.Message);
                 throw;
             }
          

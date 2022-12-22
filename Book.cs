@@ -81,11 +81,11 @@ namespace LibraryManagement
             string result;
             do
             {
-                Console.Write(prompt);
+                Console.Write(Program.formattedSpace + prompt);
                 result = Console.ReadLine();
                 while (result.Length < 3)
                 {
-                    Console.WriteLine("\nPlease enter a word with at least 3 characters!!!");
+                    Console.WriteLine(Program.formattedSpace + "\nPlease enter a word with at least 3 characters!!!");
                     Console.Write(prompt);
                     result = Console.ReadLine();
 
@@ -96,7 +96,7 @@ namespace LibraryManagement
         public void BorrowBook(Dictionary<string, Book> books)
         {
             string samplefileUrl = "https://www.africau.edu/images/default/sample.pdf";
-            string booktitle = readBookString("\nPlease search for a book by its title: ");
+            string booktitle = readBookString(Program.formattedSpace + "\nPlease search for a book by its title: ");
 
             //get a list of all keys and convert to lower case
             List<string> bookKeys = new List<string>(books.Keys);
@@ -113,10 +113,10 @@ namespace LibraryManagement
             {
                 if (matchingRecords.Count > 1)
                 {
-                    Console.WriteLine("\nHere are the corresponding matches to your search: ");
+                    Console.WriteLine(Program.formattedSpace + "\nHere are the corresponding matches to your search: ");
                     for (int i = 0; i < matchingRecords.Count; i++)
                     {
-                        Console.WriteLine((i + 1) + ". " + books[matchingRecords[i]].title + " by " + books[matchingRecords[i]].author);
+                        Console.WriteLine(Program.formattedSpace + (i + 1) + ". " + books[matchingRecords[i]].title + " by " + books[matchingRecords[i]].author);
                         Book newBook = new Book
                         {
                             author = books[matchingRecords[i]].author,
@@ -129,16 +129,16 @@ namespace LibraryManagement
                 }
                 else
                 {
-                    Console.WriteLine("\nThis is the book");
-                    Console.WriteLine("\n" + (1) + ". " + books[matchingRecords[0]].title + " by " + books[matchingRecords[0]].author);
-                    Console.Write("\npress 1 to download or any key to view all available books again: ");
+                    Console.WriteLine(Program.formattedSpace + "\nThis is the book");
+                    Console.WriteLine(Program.formattedSpace + "\n" + (1) + ". " + books[matchingRecords[0]].title + " by " + books[matchingRecords[0]].author);
+                    Console.Write(Program.formattedSpace + "\npress 1 to download or any key to view all available books again: ");
                     string response = Console.ReadLine();
                     string positive = "1";
                     if (response == positive)
                     {
                         string user = Program.globalUser;
                         downloadFile(user,samplefileUrl, books[matchingRecords[0]].title);
-                        Console.WriteLine("\n" + books[matchingRecords[0]].title + " downloaded successfully.");
+                        Console.WriteLine(Program.formattedSpace + "\n" + books[matchingRecords[0]].title + " downloaded successfully.");
                         //Console.WriteLine("\n You have successfully downloaded the following books");
                         string displayMessage = "\n You have successfully downloaded the following books";
                         Program.DisplayUserHistory(user, displayMessage);
@@ -153,7 +153,7 @@ namespace LibraryManagement
             }
             else
             {
-                Console.WriteLine("\nThere are no matches for your request");
+                Console.WriteLine(Program.formattedSpace + "\nThere are no matches for your request");
                 DisplayBooks();
 
             }
@@ -232,7 +232,7 @@ namespace LibraryManagement
             allBooks = this.GetAllBooks();
             if (allBooks.Count > 0)
             {
-                Console.WriteLine("\n  These are the available books with authors, you can download one book at a time\n");
+                Console.WriteLine(Program.formattedSpace+"\nThese are the available books with authors, you can download one book at a time\n");
 
                 //Order in ascending 
                 List<Book> bookList = new List<Book>(allBooks.Values).OrderBy(x => x.title).ToList();
@@ -240,7 +240,7 @@ namespace LibraryManagement
                 Console.WriteLine("    Book Title                  |    Author");
                 for (int i = 0; i < bookList.Count; i++)
                 {
-                    Console.WriteLine((i + 1) + ". " + bookList[i].title + "   by " + bookList[i].author);
+                    Console.WriteLine(Program.formattedSpace + (i + 1) + ". " + bookList[i].title + "   by " + bookList[i].author);
                 }
                 BorrowBook(allBooks);
             }
