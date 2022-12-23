@@ -83,82 +83,103 @@ namespace LibraryManagement
             {
                 Console.Write(Program.formattedSpace + prompt);
                 result = Console.ReadLine();
-                while (result.Length < 3)
-                {
-                    Console.WriteLine(Program.formattedSpace + "\nPlease enter a word with at least 3 characters!!!");
-                    Console.Write(prompt);
-                    result = Console.ReadLine();
+                //while (result.Length < 3)
+                //{
+                //    Console.WriteLine(Program.formattedSpace + "\nPlease enter a word with at least 3 characters!!!");
+                //    Console.Write(prompt);
+                //    result = Console.ReadLine();
 
-                }
+                //}
             } while (result.Trim() == "");
             return result;
         }
         public void BorrowBook(Dictionary<string, Book> books)
         {
             string samplefileUrl = "https://www.africau.edu/images/default/sample.pdf";
-            string booktitle = ReadBookString(Program.formattedSpace + "\nPlease search for a book by its title: ");
-
-            //get a list of all keys and convert to lower case
-            List<string> bookTitles = new List<string>(books.Keys);
-            List<string> matchingRecords = new List<string>();
-            Dictionary<string, Book> matchedBook = new Dictionary<string, Book>();
-            for (int i = 0; i < bookTitles.Count; i++)
+            string booktitle = ReadBookString(Program.formattedSpace + "\nPlease search for a book by its title or number: ");
+            int number;
+            bool success = int.TryParse(booktitle, out number);
+            //List<Book> bookList = new List<Book>(allBooks.Values).OrderBy(x => x.title).ToList();
+            List<string> bookTitles = new List<string>(books.Keys).OrderBy(i => i).ToList();
+            if (success)
             {
-                if (bookTitles[i].ToLower().Contains(booktitle.ToLower()))
+                if(number < bookTitles.Count)
                 {
-                    matchingRecords.Add(bookTitles[i]);
-                }
-            }
-            if (matchingRecords.Count > 0)
-            {
-                if (matchingRecords.Count > 1)
-                {
-                    Console.WriteLine(Program.formattedSpace + "\nHere are the corresponding matches to your search: ");
-                    for (int i = 0; i < matchingRecords.Count; i++)
-                    {
-                        Console.WriteLine(Program.formattedSpace + (i + 1) + ". " + books[matchingRecords[i]].title + " by " + books[matchingRecords[i]].author);
-                        Book newBook = new Book
-                        {
-                            author = books[matchingRecords[i]].author,
-                            title = books[matchingRecords[i]].title
-                        };
-                        matchedBook.Add(books[matchingRecords[i]].title, newBook);
-                    }
-                    //makes the user select one book at a time
-                    BorrowBook(matchedBook);
+                    int bookIndex = number - 1;
+                    Console.WriteLine(bookTitles[bookIndex]);                   
+                   
+                   //Console.WriteLine();
                 }
                 else
                 {
-                    Console.WriteLine(Program.formattedSpace + "\nThis is the book");
-                    Console.WriteLine(Program.formattedSpace + "\n" + (1) + ". " + books[matchingRecords[0]].title + " by " + books[matchingRecords[0]].author);
-                    Console.Write(Program.formattedSpace + "\npress 1 to download or any key to view all available books again: ");
-                    string response = Console.ReadLine();
-                    string positive = "1";
-                    if (response == positive)
-                    {
-                        string user = Program.globalUser;
-                        string datePattern = "dddd, dd MMMM yyyy hh:mm tt";
-                        string downloadDate = DateTime.Now.ToString(datePattern);
-                        downloadFile(user,samplefileUrl, books[matchingRecords[0]].title +"@" +downloadDate);
-                        Console.WriteLine(Program.formattedSpace + "\n" + books[matchingRecords[0]].title + " downloaded successfully. ");
-                        //Console.WriteLine("\n You have successfully downloaded the following books");
-                        string displayMessage = "\n You have successfully downloaded the following books";
-                        Program.DisplayUserHistory(user, displayMessage);
 
-                    }
-                    else
-                    {
-                        DisplayBooks();
-                    }
                 }
 
+                Console.WriteLine(number);
             }
             else
             {
-                Console.WriteLine(Program.formattedSpace + "\nThere are no matches for your request");
-                DisplayBooks();
+                //get a list of all keys and convert to lower case
+             
+                List<string> matchingRecords = new List<string>();
+                Dictionary<string, Book> matchedBook = new Dictionary<string, Book>();
+                for (int i = 0; i < bookTitles.Count; i++)
+                {
+                    if (bookTitles[i].ToLower().Contains(booktitle.ToLower()))
+                    {
+                        matchingRecords.Add(bookTitles[i]);
+                    }
+                }
+                if (matchingRecords.Count > 0)
+                {
+                    if (matchingRecords.Count > 1)
+                    {
+                        Console.WriteLine(Program.formattedSpace + "\nHere are the corresponding matches to your search: ");
+                        for (int i = 0; i < matchingRecords.Count; i++)
+                        {
+                            Console.WriteLine(Program.formattedSpace + (i + 1) + ". " + books[matchingRecords[i]].title + " by " + books[matchingRecords[i]].author);
+                            Book newBook = new Book
+                            {
+                                author = books[matchingRecords[i]].author,
+                                title = books[matchingRecords[i]].title
+                            };
+                            matchedBook.Add(books[matchingRecords[i]].title, newBook);
+                        }
+                        //makes the user select one book at a time
+                        BorrowBook(matchedBook);
+                    }
+                    else
+                    {
+                        Console.WriteLine(Program.formattedSpace + "\nThis is the book");
+                        Console.WriteLine(Program.formattedSpace + "\n" + (1) + ". " + books[matchingRecords[0]].title + " by " + books[matchingRecords[0]].author);
+                        Console.Write(Program.formattedSpace + "\npress 1 to download or any key to view all available books again: ");
+                        string response = Console.ReadLine();
+                        string positive = "1";
+                        if (response == positive)
+                        {
+                            string user = Program.globalUser;
+                            string datePattern = "dddd, dd MMMM yyyy hh:mm tt";
+                            string downloadDate = DateTime.Now.ToString(datePattern);
+                            downloadFile(user, samplefileUrl, books[matchingRecords[0]].title + "@" + downloadDate);
+                            Console.WriteLine(Program.formattedSpace + "\n" + books[matchingRecords[0]].title + " downloaded successfully. ");
+                            string displayMessage = "\n You have successfully downloaded the following books";
+                            Program.DisplayUserHistory(user, displayMessage);
+                        }
+                        else
+                        {
+                            DisplayBooks();
+                        }
+                    }
 
+                }
+                else
+                {
+                    Console.WriteLine(Program.formattedSpace + "\nThere are no matches for your request");
+                    DisplayBooks();
+                }
             }
+
+           
         }
 
 

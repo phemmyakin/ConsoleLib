@@ -142,7 +142,7 @@ namespace LibraryManagement
             }
             else
             {
-                Console.WriteLine("This platform is for borrowing books");
+                Console.WriteLine("This applicatiion is for downloading free books, \n Book upload will be availbale in version 2 ");
             }
         }
 
