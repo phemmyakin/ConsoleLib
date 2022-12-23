@@ -156,11 +156,7 @@ namespace LibraryManagement
                 }
             }           
         }
-        /*
-         code to download file from  gotten from :
-         https://stackoverflow.com/questions/307688/how-to-download-a-file-from-a-url-in-c
-        assessed 15/12/2022
-         */
+
         private static void ProcessDownload(Dictionary<string, Book> books, string title)
         {
             string samplefileUrl = "https://www.africau.edu/images/default/sample.pdf";
@@ -186,14 +182,20 @@ namespace LibraryManagement
                 book.DisplayBooks();
             }
         }
-        private static void DownloadFile(string user, string url,string file)
+
+                    /*
+             code to download file from  gotten from :
+             https://stackoverflow.com/questions/307688/how-to-download-a-file-from-a-url-in-c
+            assessed 15/12/2022
+             */
+        private static void DownloadFile(string user, string fileUrl,string file)
         {
 
             string [] newFile = file.Split('@');
             string filename = newFile[0] + ".pdf";
-            string downloadDate = newFile[1];
+            //string downloadDate = newFile[1];
             WebClient client = new WebClient();
-            client.DownloadFile(url, filename);
+            client.DownloadFile(fileUrl, filename);
             List<string> userData = new List<string>
             {
                 user,
