@@ -102,20 +102,9 @@ namespace LibraryManagement
             List<string> bookTitles = new List<string>(books.Keys).OrderBy(i => i).ToList();
             if (success)
             {
-
-                //if(number > 0 && number <= bookTitles.Count)
-                //{
-                //    int bookIndex = number - 1;
-                //    string bookTitle = bookTitles[bookIndex];
-                //    ProcessDownload(books, bookTitle);
-                //    //Console.WriteLine();
-                //}
-                //else
-                //{
-
-                //}
                 while (number <= 0 || number > bookTitles.Count)
                 {
+                    Console.WriteLine("\nPlease enter a positive serial number that corresponds to a book number");
                     BorrowBook(books);
                 }
                 int bookIndex = number - 1;
