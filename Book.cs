@@ -88,34 +88,30 @@ namespace LibraryManagement
                 //    Console.WriteLine(Program.formattedSpace + "\nPlease enter a word with at least 3 characters!!!");
                 //    Console.Write(prompt);
                 //    result = Console.ReadLine();
-
                 //}
             } while (result.Trim() == "");
             return result;
         }
         public void BorrowBook(Dictionary<string, Book> books)
         {
-            string samplefileUrl = "https://www.africau.edu/images/default/sample.pdf";
-            string booktitle = ReadBookString(Program.formattedSpace + "\nPlease search for a book by its title or number: ");
+           string booktitle = ReadBookString(Program.formattedSpace + "\nPlease search for a book by its title or serial number: ");
             int number;
             bool success = int.TryParse(booktitle, out number);
             //List<Book> bookList = new List<Book>(allBooks.Values).OrderBy(x => x.title).ToList();
             List<string> bookTitles = new List<string>(books.Keys).OrderBy(i => i).ToList();
             if (success)
             {
-                if(number < bookTitles.Count)
+                if(number <= bookTitles.Count)
                 {
                     int bookIndex = number - 1;
-                    Console.WriteLine(bookTitles[bookIndex]);                   
-                   
-                   //Console.WriteLine();
+                    string bookTitle = bookTitles[bookIndex];
+                    ProcessDownload(books, bookTitle);
+                    //Console.WriteLine();
                 }
                 else
                 {
 
                 }
-
-                Console.WriteLine(number);
             }
             else
             {
@@ -150,45 +146,69 @@ namespace LibraryManagement
                     }
                     else
                     {
-                        Console.WriteLine(Program.formattedSpace + "\nThis is the book");
-                        Console.WriteLine(Program.formattedSpace + "\n" + (1) + ". " + books[matchingRecords[0]].title + " by " + books[matchingRecords[0]].author);
-                        Console.Write(Program.formattedSpace + "\npress 1 to download or any key to view all available books again: ");
-                        string response = Console.ReadLine();
-                        string positive = "1";
-                        if (response == positive)
-                        {
-                            string user = Program.globalUser;
-                            string datePattern = "dddd, dd MMMM yyyy hh:mm tt";
-                            string downloadDate = DateTime.Now.ToString(datePattern);
-                            downloadFile(user, samplefileUrl, books[matchingRecords[0]].title + "@" + downloadDate);
-                            Console.WriteLine(Program.formattedSpace + "\n" + books[matchingRecords[0]].title + " downloaded successfully. ");
-                            string displayMessage = "\n You have successfully downloaded the following books";
-                            Program.DisplayUserHistory(user, displayMessage);
-                        }
-                        else
-                        {
-                            DisplayBooks();
-                        }
+                        string bookTitle = books[matchingRecords[0]].title;
+                        //string author = books[matchingRecords[0]].author;
+                        ProcessDownload(books, bookTitle);
+                        //ProcessDownload(title, author);
+                        //Console.WriteLine(Program.formattedSpace + "\nThis is the book");
+                        //Console.WriteLine(Program.formattedSpace + "\n" + (1) + ". " + books[matchingRecords[0]].title + " by " + books[matchingRecords[0]].author);
+                        //Console.Write(Program.formattedSpace + "\npress 1 to download or any key to view all available books again: ");
+                        //string response = Console.ReadLine();
+                        //string positive = "1";
+                        //if (response == positive)
+                        //{
+                        //    string user = Program.globalUser;
+                        //    string datePattern = "dddd, dd MMMM yyyy hh:mm tt";
+                        //    string downloadDate = DateTime.Now.ToString(datePattern);
+                        //    DownloadFile(user, samplefileUrl, books[matchingRecords[0]].title + "@" + downloadDate);
+                        //    Console.WriteLine(Program.formattedSpace + "\n" + books[matchingRecords[0]].title + " downloaded successfully. ");
+                        //    string displayMessage = "\n You have successfully downloaded the following books";
+                        //    Program.DisplayUserHistory(user, displayMessage);
+                        //}
+                        //else
+                        //{
+                        //    DisplayBooks();
+                        //}
                     }
-
                 }
                 else
                 {
                     Console.WriteLine(Program.formattedSpace + "\nThere are no matches for your request");
                     DisplayBooks();
                 }
-            }
-
-           
+            }           
         }
-
-
         /*
          code to download file from  gotten from :
          https://stackoverflow.com/questions/307688/how-to-download-a-file-from-a-url-in-c
         assessed 15/12/2022
          */
-        private static void downloadFile(string user, string url,string file)
+        private static void ProcessDownload(Dictionary<string, Book> books, string title)
+        {
+            string samplefileUrl = "https://www.africau.edu/images/default/sample.pdf";
+
+            Console.WriteLine(Program.formattedSpace + "\nThis is the book");
+            Console.WriteLine(Program.formattedSpace + "\n" + (1) + ". " + books[title].title + " by " + books[title].author);
+            Console.Write(Program.formattedSpace + "\npress 1 to download or any key to view all available books again: ");
+            string response = Console.ReadLine();
+            string positive = "1";
+            if (response == positive)
+            {
+                string user = Program.globalUser;
+                string datePattern = "dddd, dd MMMM yyyy hh:mm tt";
+                string downloadDate = DateTime.Now.ToString(datePattern);
+                DownloadFile(user, samplefileUrl, title + "@" + downloadDate);
+                Console.WriteLine(Program.formattedSpace + "\n" + books[title].title + " downloaded successfully. ");
+                string displayMessage = "\n You have successfully downloaded the following books";
+                Program.DisplayUserHistory(user, displayMessage);
+            }
+            else
+            {
+                Book book = new Book();
+                book.DisplayBooks();
+            }
+        }
+        private static void DownloadFile(string user, string url,string file)
         {
 
             string [] newFile = file.Split('@');
