@@ -23,8 +23,8 @@ namespace LibraryManagement
             string[] allUsers = GetAllUsers();
             Console.WriteLine("\tWelcome to HOE public library!!! ");
 
-            const string welcomeNote = "\nPlease enter your unique username:";
-            string userName = ReadString(welcomeNote);
+            const string nameRequest = "\nPlease enter your unique username:";
+            string userName = ReadString(nameRequest).ToLower();
             globalUser = userName;
 
             foreach (string user in allUsers)

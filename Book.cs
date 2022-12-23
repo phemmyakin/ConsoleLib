@@ -94,11 +94,10 @@ namespace LibraryManagement
         }
         public void BorrowBook(Dictionary<string, Book> books)
         {
-
-           string booktitle = ReadBookString(Program.formattedSpace + "\nPlease search for a book by its title or serial number: ");
+           string bookRequest = ReadBookString(Program.formattedSpace + "\nPlease search for a book by its title or serial number: ");
             int number;
-            bool success = int.TryParse(booktitle, out number);
-            //List<Book> bookList = new List<Book>(allBooks.Values).OrderBy(x => x.title).ToList();
+            bool success = int.TryParse(bookRequest, out number);
+            //order in ascending
             List<string> bookTitles = new List<string>(books.Keys).OrderBy(i => i).ToList();
             if (success)
             {
@@ -120,7 +119,7 @@ namespace LibraryManagement
                 Dictionary<string, Book> matchedBook = new Dictionary<string, Book>();
                 for (int i = 0; i < bookTitles.Count; i++)
                 {
-                    if (bookTitles[i].ToLower().Contains(booktitle.ToLower()))
+                    if (bookTitles[i].ToLower().Contains(bookRequest.ToLower()))
                     {
                         matchingRecords.Add(bookTitles[i]);
                     }
