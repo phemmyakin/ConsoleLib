@@ -19,10 +19,11 @@ namespace LibraryManagement
             bool userExist = false;
             Book book = new Book();
             string userQuestion = "";
-           
+            
             string[] allUsers = GetAllUsers();
-            Console.WriteLine(formattedSpace + "Welcome to HOE public library!!! ");
-            const string welcomeNote = "\n  Please enter your unique username:";
+            Console.WriteLine("\tWelcome to HOE public library!!! ");
+
+            const string welcomeNote = "\nPlease enter your unique username:";
             string userName = ReadString(welcomeNote);
             globalUser = userName;
 
@@ -63,12 +64,16 @@ namespace LibraryManagement
 
         public static void DisplayUserHistory(string userName, string displayMessage)
         {
+
             List<string> fetchedData = GetUserData(userName);
 
             Console.WriteLine(formattedSpace + displayMessage);
-            for (int i = 1; i < fetchedData.Count; i++)
+            for (int i = 0; i < fetchedData.Count; i++)
             {
-                Console.WriteLine(formattedSpace + i + ". " + fetchedData[i]);
+                string[] splittedData = fetchedData[i].Split('@');
+                string bookTitle = splittedData[0];
+                string downloadDate = splittedData[1];
+                Console.WriteLine(formattedSpace + (i+1) + ". " + bookTitle + " on "+ downloadDate);
             }
         }
 
@@ -135,6 +140,10 @@ namespace LibraryManagement
             {
                 book.DisplayBooks();
             }
+            else
+            {
+                Console.WriteLine("This platform is for borrowing books");
+            }
         }
 
         static void SaveUser(string userName)
@@ -163,9 +172,9 @@ namespace LibraryManagement
             FileStream file = File.OpenRead(fileName);
             try
             {
-                List<string> array = (List<string>)bf.Deserialize(file);
+                List<string> userData = (List<string>)bf.Deserialize(file);
                 file.Close();
-                return array;
+                return userData;
             }
             catch (Exception ex)
             {

@@ -76,7 +76,7 @@ namespace LibraryManagement
             return result;
         }
 
-        public static string readBookString(string prompt)
+        public static string ReadBookString(string prompt)
         {
             string result;
             do
@@ -96,17 +96,17 @@ namespace LibraryManagement
         public void BorrowBook(Dictionary<string, Book> books)
         {
             string samplefileUrl = "https://www.africau.edu/images/default/sample.pdf";
-            string booktitle = readBookString(Program.formattedSpace + "\nPlease search for a book by its title: ");
+            string booktitle = ReadBookString(Program.formattedSpace + "\nPlease search for a book by its title: ");
 
             //get a list of all keys and convert to lower case
-            List<string> bookKeys = new List<string>(books.Keys);
+            List<string> bookTitles = new List<string>(books.Keys);
             List<string> matchingRecords = new List<string>();
             Dictionary<string, Book> matchedBook = new Dictionary<string, Book>();
-            for (int i = 0; i < bookKeys.Count; i++)
+            for (int i = 0; i < bookTitles.Count; i++)
             {
-                if (bookKeys[i].ToLower().Contains(booktitle.ToLower()))
+                if (bookTitles[i].ToLower().Contains(booktitle.ToLower()))
                 {
-                    matchingRecords.Add(bookKeys[i]);
+                    matchingRecords.Add(bookTitles[i]);
                 }
             }
             if (matchingRecords.Count > 0)
@@ -137,8 +137,10 @@ namespace LibraryManagement
                     if (response == positive)
                     {
                         string user = Program.globalUser;
-                        downloadFile(user,samplefileUrl, books[matchingRecords[0]].title);
-                        Console.WriteLine(Program.formattedSpace + "\n" + books[matchingRecords[0]].title + " downloaded successfully.");
+                        string datePattern = "dddd, dd MMMM yyyy hh:mm tt";
+                        string downloadDate = DateTime.Now.ToString(datePattern);
+                        downloadFile(user,samplefileUrl, books[matchingRecords[0]].title +"@" +downloadDate);
+                        Console.WriteLine(Program.formattedSpace + "\n" + books[matchingRecords[0]].title + " downloaded successfully. ");
                         //Console.WriteLine("\n You have successfully downloaded the following books");
                         string displayMessage = "\n You have successfully downloaded the following books";
                         Program.DisplayUserHistory(user, displayMessage);
@@ -165,11 +167,14 @@ namespace LibraryManagement
          https://stackoverflow.com/questions/307688/how-to-download-a-file-from-a-url-in-c
         assessed 15/12/2022
          */
-        private static void downloadFile(string user, string url, string file)
-        {           
-            string filename = file + ".pdf";
-            WebClient cln = new WebClient();
-            cln.DownloadFile(url, filename);
+        private static void downloadFile(string user, string url,string file)
+        {
+
+            string [] newFile = file.Split('@');
+            string filename = newFile[0] + ".pdf";
+            string downloadDate = newFile[1];
+            WebClient client = new WebClient();
+            client.DownloadFile(url, filename);
             List<string> userData = new List<string>
             {
                 user,
@@ -182,6 +187,8 @@ namespace LibraryManagement
 
         static void saveUserData(List<string> dataList)
         {
+            //saves a book at a time
+
             List<string> allData = new List<string>();
             string userName = dataList[0];
             string fileName = dataList[1];           
@@ -214,8 +221,12 @@ namespace LibraryManagement
                 }
                 else
                 {
+                    List<string> newRecord = new List<string>
+                    {
+                        dataList[1]
+                    };
                     FileStream file = File.Create(binFile);
-                    bf.Serialize(file, dataList);
+                    bf.Serialize(file, newRecord);
                     file.Close();
                 }
             }
@@ -233,20 +244,20 @@ namespace LibraryManagement
             if (allBooks.Count > 0)
             {
                 Console.WriteLine(Program.formattedSpace+"\nThese are the available books with authors, you can download one book at a time\n");
-
+                
                 //Order in ascending 
                 List<Book> bookList = new List<Book>(allBooks.Values).OrderBy(x => x.title).ToList();
 
-                Console.WriteLine("    Book Title                  |    Author");
                 for (int i = 0; i < bookList.Count; i++)
                 {
                     Console.WriteLine(Program.formattedSpace + (i + 1) + ". " + bookList[i].title + "   by " + bookList[i].author);
                 }
+                //i need to do the cutting and cleaning here
                 BorrowBook(allBooks);
             }
             else
             {
-                Console.WriteLine("\n  There are no books available right now");
+                Console.WriteLine(Program.formattedSpace + "\nThere are no books available right now");
                 DisplayBooks();
             }
         }
