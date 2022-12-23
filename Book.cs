@@ -94,6 +94,7 @@ namespace LibraryManagement
         }
         public void BorrowBook(Dictionary<string, Book> books)
         {
+
            string booktitle = ReadBookString(Program.formattedSpace + "\nPlease search for a book by its title or serial number: ");
             int number;
             bool success = int.TryParse(booktitle, out number);
@@ -101,17 +102,26 @@ namespace LibraryManagement
             List<string> bookTitles = new List<string>(books.Keys).OrderBy(i => i).ToList();
             if (success)
             {
-                if(number <= bookTitles.Count)
-                {
-                    int bookIndex = number - 1;
-                    string bookTitle = bookTitles[bookIndex];
-                    ProcessDownload(books, bookTitle);
-                    //Console.WriteLine();
-                }
-                else
-                {
 
+                //if(number > 0 && number <= bookTitles.Count)
+                //{
+                //    int bookIndex = number - 1;
+                //    string bookTitle = bookTitles[bookIndex];
+                //    ProcessDownload(books, bookTitle);
+                //    //Console.WriteLine();
+                //}
+                //else
+                //{
+
+                //}
+                while (number <= 0 || number > bookTitles.Count)
+                {
+                    BorrowBook(books);
                 }
+                int bookIndex = number - 1;
+                string bookTitle = bookTitles[bookIndex];
+                ProcessDownload(books, bookTitle);
+
             }
             else
             {
@@ -149,26 +159,6 @@ namespace LibraryManagement
                         string bookTitle = books[matchingRecords[0]].title;
                         //string author = books[matchingRecords[0]].author;
                         ProcessDownload(books, bookTitle);
-                        //ProcessDownload(title, author);
-                        //Console.WriteLine(Program.formattedSpace + "\nThis is the book");
-                        //Console.WriteLine(Program.formattedSpace + "\n" + (1) + ". " + books[matchingRecords[0]].title + " by " + books[matchingRecords[0]].author);
-                        //Console.Write(Program.formattedSpace + "\npress 1 to download or any key to view all available books again: ");
-                        //string response = Console.ReadLine();
-                        //string positive = "1";
-                        //if (response == positive)
-                        //{
-                        //    string user = Program.globalUser;
-                        //    string datePattern = "dddd, dd MMMM yyyy hh:mm tt";
-                        //    string downloadDate = DateTime.Now.ToString(datePattern);
-                        //    DownloadFile(user, samplefileUrl, books[matchingRecords[0]].title + "@" + downloadDate);
-                        //    Console.WriteLine(Program.formattedSpace + "\n" + books[matchingRecords[0]].title + " downloaded successfully. ");
-                        //    string displayMessage = "\n You have successfully downloaded the following books";
-                        //    Program.DisplayUserHistory(user, displayMessage);
-                        //}
-                        //else
-                        //{
-                        //    DisplayBooks();
-                        //}
                     }
                 }
                 else
@@ -221,8 +211,6 @@ namespace LibraryManagement
                 user,
                 file
             };
-            //userData.Add(user);
-            //userData.Add(file);
             saveUserData(userData);
         }
 
@@ -238,7 +226,6 @@ namespace LibraryManagement
 
             //Check if the previous record exist
             //deserialie the previous records and add the new record to it
-
             try
             {
                 if (File.Exists(binFile))
@@ -273,7 +260,6 @@ namespace LibraryManagement
             }
             catch (Exception ex)
             {
-
                 Console.WriteLine(ex.Message);
             }
         }
@@ -285,6 +271,7 @@ namespace LibraryManagement
             if (allBooks.Count > 0)
             {
                 Console.WriteLine(Program.formattedSpace+"\nThese are the available books with authors, you can download one book at a time\n");
+                Console.WriteLine(Program.formattedSpace +"S/N : BOOK TITLE\n");
                 
                 //Order in ascending 
                 List<Book> bookList = new List<Book>(allBooks.Values).OrderBy(x => x.title).ToList();
