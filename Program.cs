@@ -19,11 +19,10 @@ namespace LibraryManagement
             bool userExist = false;
             Book book = new Book();
             string userQuestion = "";
-            
-            string[] allUsers = GetAllUsers();
-            Console.WriteLine("\tWelcome to HOE public library!!! ");
-
             const string nameRequest = "\nPlease enter your unique username:";
+            string[] allUsers = GetAllUsers();
+            Console.WriteLine("\tWelcome to Hucknall public library, where you download any book of choice from the available list of books!!! ");    
+            
             string userName = ReadString(nameRequest).ToLower();
             globalUser = userName;
 
@@ -36,9 +35,7 @@ namespace LibraryManagement
             }
             if (!userExist)
             {
-                // ask for the user first name and last name
                 SaveUser(userName);
-                //userQuestion = "\n  Would you like to download a book: ";
             }
             else
             {
@@ -47,14 +44,13 @@ namespace LibraryManagement
                 Console.WriteLine(formattedSpace + "\nWelcome back " + userName);
                 try
                 {
-                   // userQuestion = "\n  Would you like to download another book: ";
                     string displayMessage = "\nYou previosly downloaded the following books\n";
                     DisplayUserHistory(userName, displayMessage);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(formattedSpace+"\nSorry, I could not fetch your records, the file could be missing/corrupted");            
-                }               
+                    Console.WriteLine(formattedSpace + "\nSorry, I could not fetch your records, the file could be missing/corrupted");
+                }
             }
             userQuestion = "\nWould you like to download another book: ";
             book.DisplayBooks();
@@ -64,16 +60,17 @@ namespace LibraryManagement
 
         public static void DisplayUserHistory(string userName, string displayMessage)
         {
-
             List<string> fetchedData = GetUserData(userName);
 
             Console.WriteLine(formattedSpace + displayMessage);
             for (int i = 0; i < fetchedData.Count; i++)
             {
+                int titleIndex = 0;
+                int dateIndex = 1;
                 string[] splittedData = fetchedData[i].Split('@');
-                string bookTitle = splittedData[0];
-                string downloadDate = splittedData[1];
-                Console.WriteLine(formattedSpace + (i+1) + ". " + bookTitle + " on "+ downloadDate);
+                string bookTitle = splittedData[titleIndex];
+                string downloadDate = splittedData[dateIndex];
+                Console.WriteLine(formattedSpace + (i + 1) + ". " + bookTitle + " on " + downloadDate);
             }
         }
 
@@ -146,16 +143,16 @@ namespace LibraryManagement
             }
         }
 
-        static void SaveUser(string userName)
+        public static void SaveUser(string userName)
         {
             string path = "../../asset/userList.txt";
-            var cc = File.OpenWrite(path);
-            cc.Close();
+            FileStream fileStream = File.OpenWrite(path);
+            fileStream.Close();
             StreamWriter writer = new StreamWriter(path, true);
             writer.WriteLine(userName);
             writer.Close();
         }
-        static string[] GetAllUsers()
+        public static string[] GetAllUsers()
         {
             string path = "../../asset/userList.txt";
             FileStream stream = File.OpenWrite(path);
@@ -164,9 +161,10 @@ namespace LibraryManagement
             return users;
         }
 
-       public static  List<string> GetUserData( string userName)
+        public static List<string> GetUserData(string userName)
         {
             //handle missing file here and catch the exception
+            //save the user record using the unique username of the user
             string fileName = userName + ".bin";
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.OpenRead(fileName);
@@ -182,7 +180,7 @@ namespace LibraryManagement
                 File.Delete(fileName);
                 throw;
             }
-         
+
         }
     }
 }

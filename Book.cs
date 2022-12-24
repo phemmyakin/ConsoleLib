@@ -94,14 +94,17 @@ namespace LibraryManagement
         }
         public void BorrowBook(Dictionary<string, Book> books)
         {
-           string bookRequest = ReadBookString(Program.formattedSpace + "\nPlease search for a book by its title or serial number: ");
             int number;
+            int Zero = 0;
+            string bookRequest = ReadBookString(Program.formattedSpace + "\nPlease search for a book by its title or serial number: ");
+          
             bool success = int.TryParse(bookRequest, out number);
             //order in ascending
             List<string> bookTitles = new List<string>(books.Keys).OrderBy(i => i).ToList();
             if (success)
             {
-                while (number <= 0 || number > bookTitles.Count)
+                //Uses the serial number to search the book
+                while (number <= Zero || number > bookTitles.Count)
                 {
                     Console.WriteLine("\nPlease enter a positive serial number that corresponds to a book number");
                     BorrowBook(books);
@@ -113,6 +116,7 @@ namespace LibraryManagement
             }
             else
             {
+                //Uses the book title to search the list
                 //get a list of all keys and convert to lower case
              
                 List<string> matchingRecords = new List<string>();
@@ -139,13 +143,12 @@ namespace LibraryManagement
                             };
                             matchedBook.Add(books[matchingRecords[i]].title, newBook);
                         }
-                        //makes the user select one book at a time
+                        //user can only download one book at a time,
                         BorrowBook(matchedBook);
                     }
                     else
                     {
                         string bookTitle = books[matchingRecords[0]].title;
-                        //string author = books[matchingRecords[0]].author;
                         ProcessDownload(books, bookTitle);
                     }
                 }
@@ -157,7 +160,7 @@ namespace LibraryManagement
             }           
         }
 
-        private static void ProcessDownload(Dictionary<string, Book> books, string title)
+        public static void ProcessDownload(Dictionary<string, Book> books, string title)
         {
             string samplefileUrl = "https://www.africau.edu/images/default/sample.pdf";
 
@@ -190,7 +193,7 @@ namespace LibraryManagement
              */
         private static void DownloadFile(string user, string fileUrl,string file)
         {
-
+            //split the file to separate the book title from the date
             string [] newFile = file.Split('@');
             string filename = newFile[0] + ".pdf";
             //string downloadDate = newFile[1];
@@ -204,13 +207,14 @@ namespace LibraryManagement
             saveUserData(userData);
         }
 
-        static void saveUserData(List<string> dataList)
+        public static void saveUserData(List<string> dataList)
         {
             //saves a book at a time
-
-            List<string> allData = new List<string>();
-            string userName = dataList[0];
-            string fileName = dataList[1];           
+            int userNameIndex = 0;
+            int fileNameIndex = 1;
+            List<string> userHistory = new List<string>();
+            string userName = dataList[userNameIndex];
+            string fileName = dataList[fileNameIndex];           
             string binFile = userName + ".bin";
             BinaryFormatter bf = new BinaryFormatter();
 
@@ -222,7 +226,7 @@ namespace LibraryManagement
                 {
                     try
                     {
-                        allData = Program.GetUserData(userName);
+                        userHistory = Program.GetUserData(userName);
                     }
                     catch (Exception ex)
                     {
@@ -230,8 +234,8 @@ namespace LibraryManagement
                     }
                     finally
                     {
-                        allData.Add(fileName);
-                        List<string> distinctData = allData.Distinct().ToList();
+                        userHistory.Add(fileName);
+                        List<string> distinctData = userHistory.Distinct().ToList();
                         FileStream file = File.Create(binFile);
                         bf.Serialize(file, distinctData);
                         file.Close();
@@ -241,7 +245,7 @@ namespace LibraryManagement
                 {
                     List<string> newRecord = new List<string>
                     {
-                        dataList[1]
+                        dataList[fileNameIndex]
                     };
                     FileStream file = File.Create(binFile);
                     bf.Serialize(file, newRecord);
