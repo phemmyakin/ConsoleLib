@@ -162,9 +162,10 @@ namespace LibraryManagement
 
         public static void ProcessDownload(Dictionary<string, Book> books, string title)
         {
+            User Bkuser = new User();
             string samplefileUrl = "https://www.africau.edu/images/default/sample.pdf";
 
-            Console.WriteLine(Program.formattedSpace + "\nThis is the book");
+            Console.WriteLine(Program.formattedSpace + "\nYour searched result: ");
             Console.WriteLine(Program.formattedSpace + "\n" + (1) + ". " + books[title].title + " by " + books[title].author);
             Console.Write(Program.formattedSpace + "\npress 1 to download or any key to view all available books again: ");
             string response = Console.ReadLine();
@@ -177,7 +178,7 @@ namespace LibraryManagement
                 DownloadFile(user, samplefileUrl, title + "@" + downloadDate);
                 Console.WriteLine(Program.formattedSpace + "\n" + books[title].title + " downloaded successfully. ");
                 string displayMessage = "\n You have successfully downloaded the following books";
-                Program.DisplayUserHistory(user, displayMessage);
+                Bkuser.DisplayUserHistory(user, displayMessage);
             }
             else
             {
@@ -209,6 +210,7 @@ namespace LibraryManagement
 
         public static void saveUserData(List<string> dataList)
         {
+            User bookUser = new User();
             //saves a book at a time
             int userNameIndex = 0;
             int fileNameIndex = 1;
@@ -226,9 +228,9 @@ namespace LibraryManagement
                 {
                     try
                     {
-                        userHistory = Program.GetUserData(userName);
+                        userHistory = bookUser.GetUserData(userName);
                     }
-                    catch (Exception ex)
+                    catch (Exception )
                     {
                         throw;
                     }
