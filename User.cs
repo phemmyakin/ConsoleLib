@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LibraryManagement
 {
@@ -65,7 +62,7 @@ namespace LibraryManagement
                 file.Close();
                 return userData;
             }
-            catch (Exception )
+            catch (Exception)
             {
                 file.Close();
                 File.Delete(fileName);
@@ -74,7 +71,7 @@ namespace LibraryManagement
 
         }
 
-        public  void UserRequest(string message)
+        public void UserRequest(string message)
         {
             string response;
             do
@@ -91,7 +88,7 @@ namespace LibraryManagement
             } while (response != userOption.no.ToString());
 
         }
-        public  string GetUserResponse(string message)
+        public string GetUserResponse(string message)
         {
             string result;
             result = ReadString(message);
@@ -140,9 +137,9 @@ namespace LibraryManagement
             }
             else
             {
-                Console.WriteLine("This applicatiion is for downloading free books, \n Book upload will be availbale in version 2 ");
+                Console.WriteLine("\nThis applicatiion is for downloading free books, \n Book upload will be available in version 2 ");
             }
         }
-       
+
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace LibraryManagement
@@ -84,7 +83,7 @@ namespace LibraryManagement
         }
 
 
-        public int validateResponse(int value, int count )
+        public int validateResponse(int value, int count)
         {
             int result;
             while (value <= 0 || value > count)
@@ -95,7 +94,7 @@ namespace LibraryManagement
             }
             result = value;
             return result;
-            
+
         }
 
 
@@ -106,7 +105,7 @@ namespace LibraryManagement
             int one = 1;
             int result;
             string bookRequest = ReadBookString(Program.formattedSpace + "\nPlease search for a book by its title or serial number: ");
-          
+
             bool success = int.TryParse(bookRequest, out number);
             //order in ascending
             List<string> bookTitles = new List<string>(books.Keys).OrderBy(i => i).ToList();
@@ -115,7 +114,7 @@ namespace LibraryManagement
                 //Uses the serial number to search the book               
                 try
                 {
-                     result = validateResponse(number, bookTitles.Count);
+                    result = validateResponse(number, bookTitles.Count);
                     int bookIndex = result - one;
                     string bookTitle = bookTitles[bookIndex];
                     ProcessDownload(books, bookTitle);
@@ -130,7 +129,7 @@ namespace LibraryManagement
             {
                 //Uses the book title to search the list
                 //get a list of all keys and convert to lower case
-             
+
                 List<string> matchingRecords = new List<string>();
                 Dictionary<string, Book> matchedBook = new Dictionary<string, Book>();
                 for (int i = 0; i < bookTitles.Count; i++)
@@ -169,7 +168,7 @@ namespace LibraryManagement
                     Console.WriteLine(Program.formattedSpace + "\nThere are no matches for your request");
                     DisplayBooks();
                 }
-            }           
+            }
         }
 
         public void ProcessDownload(Dictionary<string, Book> books, string title)
@@ -190,7 +189,7 @@ namespace LibraryManagement
                 string downloadDate = DateTime.Now.ToString(datePattern);
                 DownloadFile(user, samplefileUrl, title + "@" + downloadDate);
                 Console.WriteLine(Program.formattedSpace + "\n" + books[title].title + " downloaded successfully. ");
-                string displayMessage = "\n You have successfully downloaded the following books";
+                string displayMessage = "\n You have successfully downloaded the following books\n";
                 libUser.DisplayUserHistory(user, displayMessage);
             }
             else
@@ -200,15 +199,15 @@ namespace LibraryManagement
             }
         }
 
-                    /*
-             code to download file from  gotten from :
-             https://stackoverflow.com/questions/307688/how-to-download-a-file-from-a-url-in-c
-            assessed 15/12/2022
-             */
-        private void DownloadFile(string user, string fileUrl,string file)
+        /*
+ code to download file from  gotten from :
+ https://stackoverflow.com/questions/307688/how-to-download-a-file-from-a-url-in-c
+assessed 15/12/2022
+ */
+        private void DownloadFile(string user, string fileUrl, string file)
         {
             //split the file to separate the book title from the date
-            string [] newFile = file.Split('@');
+            string[] newFile = file.Split('@');
             string filename = newFile[0] + ".pdf";
             //string downloadDate = newFile[1];
             WebClient client = new WebClient();
@@ -229,7 +228,7 @@ namespace LibraryManagement
             int fileNameIndex = 1;
             List<string> userHistory = new List<string>();
             string userName = dataList[userNameIndex];
-            string fileName = dataList[fileNameIndex];           
+            string fileName = dataList[fileNameIndex];
             string binFile = userName + ".bin";
             BinaryFormatter bf = new BinaryFormatter();
 
@@ -243,7 +242,7 @@ namespace LibraryManagement
                     {
                         userHistory = bookUser.GetUserData(userName);
                     }
-                    catch (Exception )
+                    catch (Exception)
                     {
                         throw;
                     }
@@ -279,9 +278,9 @@ namespace LibraryManagement
             allBooks = this.GetAllBooks();
             if (allBooks.Count > 0)
             {
-                Console.WriteLine(Program.formattedSpace+"\nThese are the available books with authors, you can download one book at a time\n");
-                Console.WriteLine(Program.formattedSpace +"S/N : BOOK TITLE\n");
-                
+                Console.WriteLine(Program.formattedSpace + "\nThese are the available books with authors, you can download one book at a time\n");
+                Console.WriteLine(Program.formattedSpace + "S/N : BOOK TITLE\n");
+
                 //Order in ascending 
                 List<Book> bookList = new List<Book>(allBooks.Values).OrderBy(x => x.title).ToList();
 

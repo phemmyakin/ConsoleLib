@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace LibraryManagement
 {
     internal class Program
     {
-        enum userOption
-        {
-            yes,
-            no
-        }
         public static string globalUser;
         public const string formattedSpace = "  ";
         static void Main(string[] args)
@@ -22,12 +15,10 @@ namespace LibraryManagement
             User libraryUser = new User();
             string userQuestion = "";
             const string nameRequest = "\nPlease enter your unique username:";
-           
-            Console.WriteLine("\tWelcome to Hucknall public library, \nyou can download any book from the available list of books!");    
-            
+
+            Console.WriteLine("\tWelcome to Hucknall public library, \nyou can download any book from the available list of books!");
+
             string userName = libraryUser.ReadString(nameRequest).ToLower();
-           
-            //libraryUser.userName = userName;
             globalUser = userName;
             string[] allUsers = libraryUser.GetAllUsers();
             foreach (string user in allUsers)
@@ -52,7 +43,7 @@ namespace LibraryManagement
                     string displayMessage = "\nYou previosly downloaded the following books\n";
                     libraryUser.DisplayUserHistory(userName, displayMessage);
                 }
-                catch (Exception )
+                catch (Exception)
                 {
                     Console.WriteLine(formattedSpace + "\nSorry, I could not fetch your records, the file could be missing/corrupted");
                 }
@@ -63,11 +54,11 @@ namespace LibraryManagement
             book.DisplayBooks();
             Dictionary<string, Book> allBooks = book.GetAllBooks();
             int bookCount = allBooks.Count;
-            if (bookCount> zero)
+            if (bookCount > zero)
             {
                 libraryUser.UserRequest(userQuestion);
             }
             Console.ReadLine();
-        }       
+        }
     }
 }

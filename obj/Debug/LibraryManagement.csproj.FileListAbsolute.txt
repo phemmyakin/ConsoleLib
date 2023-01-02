@@ -14,3 +14,11 @@ C:\Users\User\OneDrive - Nottingham Trent University\Assessments\Software\Librar
 C:\Users\User\OneDrive - Nottingham Trent University\Assessments\Software\LibraryManagement\bin\Debug\LibraryManagement.exe.config
 C:\Users\User\OneDrive - Nottingham Trent University\Assessments\Software\LibraryManagement\bin\Debug\LibraryManagement.exe
 C:\Users\User\OneDrive - Nottingham Trent University\Assessments\Software\LibraryManagement\bin\Debug\LibraryManagement.pdb
+D:\NTU\Software Coursework\LibraryManagement\bin\Debug\LibraryManagement.exe.config
+D:\NTU\Software Coursework\LibraryManagement\bin\Debug\LibraryManagement.exe
+D:\NTU\Software Coursework\LibraryManagement\bin\Debug\LibraryManagement.pdb
+D:\NTU\Software Coursework\LibraryManagement\obj\Debug\LibraryManagement.csproj.AssemblyReference.cache
+D:\NTU\Software Coursework\LibraryManagement\obj\Debug\LibraryManagement.csproj.SuggestedBindingRedirects.cache
+D:\NTU\Software Coursework\LibraryManagement\obj\Debug\LibraryManagement.csproj.CoreCompileInputs.cache
+D:\NTU\Software Coursework\LibraryManagement\obj\Debug\LibraryManagement.exe
+D:\NTU\Software Coursework\LibraryManagement\obj\Debug\LibraryManagement.pdb
