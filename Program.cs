@@ -16,7 +16,7 @@ namespace LibraryManagement
             string userQuestion = "";
             const string nameRequest = "\nPlease enter your unique username:";
 
-            Console.WriteLine("\tWelcome to Hucknall public library, \nyou can download any book from the available list of books!");
+            Console.WriteLine("\tWelcome to HOE public library, \nyou can download any book from the available list of books!");
 
             string userName = libraryUser.ReadString(nameRequest).ToLower();
             globalUser = userName;

@@ -74,7 +74,7 @@ namespace LibraryManagement
         public void UserRequest(string message)
         {
             string response;
-            response = GetUserResponse(message);
+            do
             {
                 response = GetUserResponse(message);
                 try
@@ -85,8 +85,10 @@ namespace LibraryManagement
                 {
                     Console.WriteLine(ex.Message);
                 }
+            } while (response != userOption.no.ToString());
 
         }
+
         public string GetUserResponse(string message)
         {
             string result;
@@ -136,7 +138,18 @@ namespace LibraryManagement
             }
             else
             {
-                Console.WriteLine("\nThis applicatiion is for downloading free books, \n Book upload will be available in version 2 ");
+                string answer = GetUserResponse("\nWould you like to Upload a book: ");
+                
+                if (answer == userOption.yes.ToString())
+                {
+                    book.StartUpload();
+                    Console.WriteLine("\nFile upload completed!!!");
+                }
+                else
+                {
+                    Console.WriteLine("\nGood-Bye!!!");
+                    return;
+                }
             }
         }
 

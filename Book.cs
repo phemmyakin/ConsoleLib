@@ -21,23 +21,6 @@ namespace LibraryManagement
         {
 
         }
-        public List<Book> FetchBooks(string response)
-        {
-            string[] splittedBooks;
-            Book book;
-            List<Book> books = new List<Book>();
-            string filePath = "../../asset/books.txt";
-            // ArrayList bookList = new ArrayList();
-            string[] allbooks = File.ReadAllLines(filePath);
-            foreach (string bookstring in allbooks)
-            {
-                splittedBooks = bookstring.Split(',');
-                book = new Book(splittedBooks[0], splittedBooks[1]);
-                books.Add(book);
-            }
-            return books;
-        }
-
         public Dictionary<string, Book> GetAllBooks()
         {
             string[] splittedBooks;
@@ -83,7 +66,7 @@ namespace LibraryManagement
         }
 
 
-        public int validateResponse(int value, int count)
+        public int ValidateResponse(int value, int count)
         {
             int result;
             while (value <= 0 || value > count)
@@ -114,7 +97,7 @@ namespace LibraryManagement
                 //Uses the serial number to search the book               
                 try
                 {
-                    result = validateResponse(number, bookTitles.Count);
+                    result = ValidateResponse(number, bookTitles.Count);
                     int bookIndex = result - one;
                     string bookTitle = bookTitles[bookIndex];
                     ProcessDownload(books, bookTitle);
@@ -217,10 +200,10 @@ assessed 15/12/2022
                 user,
                 file
             };
-            saveUserData(userData);
+            SaveUserData(userData);
         }
 
-        public void saveUserData(List<string> dataList)
+        public void SaveUserData(List<string> dataList)
         {
             User bookUser = new User();
             //saves a book at a time
@@ -294,6 +277,20 @@ assessed 15/12/2022
             {
                 Console.WriteLine(Program.formattedSpace + "\nThere are no books available right now, Please try again later!");
             }
+        }
+
+        public void StartUpload()
+        {
+            string filePath = "../../asset/books.txt";
+            FileStream fileStream = File.OpenWrite(filePath);
+            fileStream.Close();
+            string title = ReadBookString("\nPlease enter the title of the book you want to upload: ");
+            string author = ReadBookString("\nEnter the authors name: ");
+            string content = title + "," + author;
+
+            StreamWriter writer = new StreamWriter(filePath, true);
+            writer.WriteLine(content);
+            writer.Close();
         }
     }
 }
