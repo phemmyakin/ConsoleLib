@@ -293,10 +293,7 @@ namespace LibraryManagement
             }
             else
             {
-                //Todo
                 Console.WriteLine(Program.formattedSpace + "\nThere are no books available right now, Please try again later!");
-
-                //DisplayBooks();
             }
         }
     }

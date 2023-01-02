@@ -19,14 +19,14 @@ namespace LibraryManagement
             bool userExist = false;
             int zero = 0;
             Book book = new Book();
-            
+            User libraryUser = new User();
             string userQuestion = "";
             const string nameRequest = "\nPlease enter your unique username:";
            
             Console.WriteLine("\tWelcome to Hucknall public library, \nyou can download any book from the available list of books!");    
             
-            string userName = ReadString(nameRequest).ToLower();
-            User libraryUser = new User();
+            string userName = libraryUser.ReadString(nameRequest).ToLower();
+           
             //libraryUser.userName = userName;
             globalUser = userName;
             string[] allUsers = libraryUser.GetAllUsers();
@@ -39,7 +39,7 @@ namespace LibraryManagement
             }
             if (!userExist)
             {
-                //SaveUser(userName);
+                Console.WriteLine(formattedSpace + "\nHello " + userName);
                 libraryUser.SaveUser(userName);
             }
             else
@@ -68,18 +68,6 @@ namespace LibraryManagement
                 libraryUser.UserRequest(userQuestion);
             }
             Console.ReadLine();
-        }
-        public static string ReadString(string prompt)
-        {
-            string result;
-            do
-            {
-                Console.Write(formattedSpace + prompt);
-                result = Console.ReadLine();
-            } while (result.Trim() == "");
-            return result;
-        }
-
-
+        }       
     }
 }
