@@ -74,7 +74,7 @@ namespace LibraryManagement
         public void UserRequest(string message)
         {
             string response;
-            do
+            response = GetUserResponse(message);
             {
                 response = GetUserResponse(message);
                 try
@@ -85,7 +85,6 @@ namespace LibraryManagement
                 {
                     Console.WriteLine(ex.Message);
                 }
-            } while (response != userOption.no.ToString());
 
         }
         public string GetUserResponse(string message)
