@@ -17,17 +17,19 @@ namespace LibraryManagement
         static void Main(string[] args)
         {
             bool userExist = false;
+            int zero = 0;
             Book book = new Book();
-            User bookUser = new User();
+            
             string userQuestion = "";
             const string nameRequest = "\nPlease enter your unique username:";
-            string[] allUsers = bookUser.GetAllUsers();
+           
             Console.WriteLine("\tWelcome to Hucknall public library, \nyou can download any book from the available list of books!");    
             
-            string userName = bookUser.ReadString(nameRequest).ToLower();
-            bookUser.userName = userName;
+            string userName = ReadString(nameRequest).ToLower();
+            User libraryUser = new User();
+            //libraryUser.userName = userName;
             globalUser = userName;
-
+            string[] allUsers = libraryUser.GetAllUsers();
             foreach (string user in allUsers)
             {
                 if (userName == user)
@@ -38,7 +40,7 @@ namespace LibraryManagement
             if (!userExist)
             {
                 //SaveUser(userName);
-                bookUser.SaveUser(userName);
+                libraryUser.SaveUser(userName);
             }
             else
             {
@@ -48,7 +50,7 @@ namespace LibraryManagement
                 try
                 {
                     string displayMessage = "\nYou previosly downloaded the following books\n";
-                    bookUser.DisplayUserHistory(userName, displayMessage);
+                    libraryUser.DisplayUserHistory(userName, displayMessage);
                 }
                 catch (Exception )
                 {
@@ -56,10 +58,28 @@ namespace LibraryManagement
                 }
             }
             userQuestion = "\nWould you like to download another book: ";
+
+
             book.DisplayBooks();
-            bookUser.UserRequest(userQuestion);
+            Dictionary<string, Book> allBooks = book.GetAllBooks();
+            int bookCount = allBooks.Count;
+            if (bookCount> zero)
+            {
+                libraryUser.UserRequest(userQuestion);
+            }
             Console.ReadLine();
         }
-        
+        public static string ReadString(string prompt)
+        {
+            string result;
+            do
+            {
+                Console.Write(formattedSpace + prompt);
+                result = Console.ReadLine();
+            } while (result.Trim() == "");
+            return result;
+        }
+
+
     }
 }

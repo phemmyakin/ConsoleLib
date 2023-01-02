@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace LibraryManagement
@@ -17,7 +18,6 @@ namespace LibraryManagement
             this.author = _author;
             this.title = _title;
         }
-
         public Book()
         {
 
@@ -35,7 +35,6 @@ namespace LibraryManagement
                 splittedBooks = bookstring.Split(',');
                 book = new Book(splittedBooks[0], splittedBooks[1]);
                 books.Add(book);
-
             }
             return books;
         }
@@ -46,6 +45,8 @@ namespace LibraryManagement
             Book book;
             Dictionary<string, Book> dictionaryOfBooks = new Dictionary<string, Book>();
             string filePath = "../../asset/books.txt";
+            FileStream fileStream = File.OpenWrite(filePath);
+            fileStream.Close();
             string[] content = File.ReadAllLines(filePath);
             foreach (string bookstring in content)
             {
@@ -65,17 +66,6 @@ namespace LibraryManagement
         }
 
 
-        public static string readString(string prompt)
-        {
-            string result;
-            do
-            {
-                Console.Write(prompt);
-                result = Console.ReadLine();
-            } while (result.Trim() == "");
-            return result;
-        }
-
         public static string ReadBookString(string prompt)
         {
             string result;
@@ -92,10 +82,29 @@ namespace LibraryManagement
             } while (result.Trim() == "");
             return result;
         }
+
+
+        public int validateResponse(int value, int count )
+        {
+            int result;
+            while (value <= 0 || value > count)
+            {
+                Console.Write("\nPlease enter a serial number that corresponds to a book number: ");
+                string answer = Console.ReadLine();
+                value = int.Parse(answer);
+            }
+            result = value;
+            return result;
+            
+        }
+
+
         public void BorrowBook(Dictionary<string, Book> books)
         {
-            int number;
-            int Zero = 0;
+            int number = 0;
+            int zero = 0;
+            int one = 1;
+            int result;
             string bookRequest = ReadBookString(Program.formattedSpace + "\nPlease search for a book by its title or serial number: ");
           
             bool success = int.TryParse(bookRequest, out number);
@@ -103,16 +112,19 @@ namespace LibraryManagement
             List<string> bookTitles = new List<string>(books.Keys).OrderBy(i => i).ToList();
             if (success)
             {
-                //Uses the serial number to search the book
-                while (number <= Zero || number > bookTitles.Count)
+                //Uses the serial number to search the book               
+                try
                 {
-                    Console.WriteLine("\nPlease enter a positive serial number that corresponds to a book number");
+                     result = validateResponse(number, bookTitles.Count);
+                    int bookIndex = result - one;
+                    string bookTitle = bookTitles[bookIndex];
+                    ProcessDownload(books, bookTitle);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("\nYou have entered an invalid input!!!");
                     BorrowBook(books);
                 }
-                int bookIndex = number - 1;
-                string bookTitle = bookTitles[bookIndex];
-                ProcessDownload(books, bookTitle);
-
             }
             else
             {
@@ -128,14 +140,14 @@ namespace LibraryManagement
                         matchingRecords.Add(bookTitles[i]);
                     }
                 }
-                if (matchingRecords.Count > 0)
+                if (matchingRecords.Count > zero)
                 {
-                    if (matchingRecords.Count > 1)
+                    if (matchingRecords.Count > one)
                     {
                         Console.WriteLine(Program.formattedSpace + "\nHere are the corresponding matches to your search: ");
                         for (int i = 0; i < matchingRecords.Count; i++)
                         {
-                            Console.WriteLine(Program.formattedSpace + (i + 1) + ". " + books[matchingRecords[i]].title + " by " + books[matchingRecords[i]].author);
+                            Console.WriteLine(Program.formattedSpace + (i + one) + ". " + books[matchingRecords[i]].title + " by " + books[matchingRecords[i]].author);
                             Book newBook = new Book
                             {
                                 author = books[matchingRecords[i]].author,
@@ -148,7 +160,7 @@ namespace LibraryManagement
                     }
                     else
                     {
-                        string bookTitle = books[matchingRecords[0]].title;
+                        string bookTitle = books[matchingRecords[zero]].title;
                         ProcessDownload(books, bookTitle);
                     }
                 }
@@ -160,9 +172,10 @@ namespace LibraryManagement
             }           
         }
 
-        public static void ProcessDownload(Dictionary<string, Book> books, string title)
+        public void ProcessDownload(Dictionary<string, Book> books, string title)
         {
-            User Bkuser = new User();
+            //Todo
+            User libUser = new User();
             string samplefileUrl = "https://www.africau.edu/images/default/sample.pdf";
 
             Console.WriteLine(Program.formattedSpace + "\nYour searched result: ");
@@ -178,7 +191,7 @@ namespace LibraryManagement
                 DownloadFile(user, samplefileUrl, title + "@" + downloadDate);
                 Console.WriteLine(Program.formattedSpace + "\n" + books[title].title + " downloaded successfully. ");
                 string displayMessage = "\n You have successfully downloaded the following books";
-                Bkuser.DisplayUserHistory(user, displayMessage);
+                libUser.DisplayUserHistory(user, displayMessage);
             }
             else
             {
@@ -192,7 +205,7 @@ namespace LibraryManagement
              https://stackoverflow.com/questions/307688/how-to-download-a-file-from-a-url-in-c
             assessed 15/12/2022
              */
-        private static void DownloadFile(string user, string fileUrl,string file)
+        private void DownloadFile(string user, string fileUrl,string file)
         {
             //split the file to separate the book title from the date
             string [] newFile = file.Split('@');
@@ -208,7 +221,7 @@ namespace LibraryManagement
             saveUserData(userData);
         }
 
-        public static void saveUserData(List<string> dataList)
+        public void saveUserData(List<string> dataList)
         {
             User bookUser = new User();
             //saves a book at a time
@@ -276,13 +289,14 @@ namespace LibraryManagement
                 {
                     Console.WriteLine(Program.formattedSpace + (i + 1) + ". " + bookList[i].title + "   by " + bookList[i].author);
                 }
-                //i need to do the cutting and cleaning here
                 BorrowBook(allBooks);
             }
             else
             {
-                Console.WriteLine(Program.formattedSpace + "\nThere are no books available right now");
-                DisplayBooks();
+                //Todo
+                Console.WriteLine(Program.formattedSpace + "\nThere are no books available right now, Please try again later!");
+
+                //DisplayBooks();
             }
         }
     }
