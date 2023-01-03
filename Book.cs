@@ -171,7 +171,7 @@ namespace LibraryManagement
                 string datePattern = "dddd, dd MMMM yyyy hh:mm tt";
                 string downloadDate = DateTime.Now.ToString(datePattern);
                 DownloadFile(user, samplefileUrl, title + "@" + downloadDate);
-                Console.WriteLine(Program.formattedSpace + "\n" + books[title].title + " downloaded successfully. ");
+                Console.WriteLine(Program.formattedSpace + "\n" + books[title].title + " downloaded successfully, Please check your folder. ");
                 string displayMessage = "\n You have successfully downloaded the following books\n";
                 libUser.DisplayUserHistory(user, displayMessage);
             }
