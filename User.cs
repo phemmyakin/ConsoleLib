@@ -42,7 +42,12 @@ namespace LibraryManagement
         }
         public string[] GetAllUsers()
         {
+            string fileDirectory = "../../asset";
             string path = "../../asset/userList.txt";
+            if (!Directory.Exists(fileDirectory))
+            {
+                Directory.CreateDirectory(fileDirectory);
+            }
             FileStream stream = File.OpenWrite(path);
             stream.Close();
             string[] users = File.ReadAllLines(path);
