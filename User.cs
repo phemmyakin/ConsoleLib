@@ -143,18 +143,24 @@ namespace LibraryManagement
             }
             else
             {
-                string answer = GetUserResponse("\nWould you like to Upload a book: ");
-                
-                if (answer == userOption.yes.ToString())
-                {
-                    book.StartUpload();
-                    Console.WriteLine("\nFile upload completed!!!");
-                }
-                else
-                {
-                    Console.WriteLine("\nGood-Bye!!!");
-                    return;
-                }
+                UploadRequest();
+            }
+        }
+
+        public void UploadRequest()
+        {
+            Book book = new Book();
+            string answer = GetUserResponse("\nWould you like to Upload a book: ");
+
+            if (answer == userOption.yes.ToString())
+            {
+                book.StartUpload();
+                Console.WriteLine("\nFile upload completed!!!");
+            }
+            else
+            {
+                Console.WriteLine("\nGood-Bye!!!");
+                return;
             }
         }
 

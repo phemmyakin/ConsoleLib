@@ -50,7 +50,6 @@ namespace LibraryManagement
             }
             userQuestion = "\nWould you like to download another book: ";
 
-
             book.DisplayBooks();
             Dictionary<string, Book> allBooks = book.GetAllBooks();
             int bookCount = allBooks.Count;

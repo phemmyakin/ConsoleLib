@@ -258,6 +258,7 @@ assessed 15/12/2022
         public void DisplayBooks()
         {
             Dictionary<string, Book> allBooks;
+            User libUser = new User();
             allBooks = this.GetAllBooks();
             if (allBooks.Count > 0)
             {
@@ -275,12 +276,15 @@ assessed 15/12/2022
             }
             else
             {
-                Console.WriteLine(Program.formattedSpace + "\nThere are no books available right now, Please try again later!");
+                //Todo
+                Console.WriteLine(Program.formattedSpace + "\nThere are no books available right now.!");
+               libUser.UploadRequest();
             }
         }
 
         public void StartUpload()
         {
+
             string filePath = "../../asset/books.txt";
             FileStream fileStream = File.OpenWrite(filePath);
             fileStream.Close();
