@@ -157,7 +157,6 @@ namespace LibraryManagement
 
         public void ProcessDownload(Dictionary<string, Book> books, string title)
         {
-            //Todo
             User libUser = new User();
             string samplefileUrl = "https://www.africau.edu/images/default/sample.pdf";
 
@@ -173,7 +172,6 @@ namespace LibraryManagement
                 string downloadDate = DateTime.Now.ToString(datePattern);
                 DownloadFile(user, samplefileUrl, title + "@" + downloadDate +"%downloaded");
                 Console.WriteLine(Program.formattedSpace + "\n" + books[title].title + " downloaded successfully, Please check your folder. \n");
-                //string displayMessage = "\n You have successfully downloaded the following books\n";
                 string displayMessage = "\n You have successfully performed the following \n";
                 libUser.DisplayUserHistory(user, displayMessage);
             }
@@ -229,7 +227,6 @@ assessed 15/12/2022
             }
             else
             {
-                //Todo
                 Console.WriteLine(Program.formattedSpace + "\nThere are no books available right now.!");
                 string uploadQue = "\nWould you like to upload a book? (yes/no): ";
                 libUser.UploadRequest(uploadQue);

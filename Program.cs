@@ -15,7 +15,6 @@ namespace LibraryManagement
             User libraryUser = new User();
             string userQuestion = "";
             string download = "1";
-            string upload = "2";
             const string nameRequest = "\nPlease enter your unique username:";
 
             Console.WriteLine("\tWelcome to HOE public library. \nYou can download any book from the available list of books  or upload a book!");
@@ -52,13 +51,12 @@ namespace LibraryManagement
                     Console.WriteLine(formattedSpace + "\nSorry, I could not fetch your records, the file could be missing/corrupted");
                 }
             }
-
             Console.Write("\nTo download a book, Press 1 \nTo upload a book, Press 2: ");
             string answer = Console.ReadLine();
             string option = libraryUser.ValidateUserChoice(answer);
             if (option == download)
             {
-                //download process
+                //Start download process
                 Dictionary<string, Book> allBooks = book.GetAllBooks();
                 book.DisplayBooks();             
 
@@ -68,27 +66,16 @@ namespace LibraryManagement
                     book.BorrowBook(allBooks);
                     userQuestion = "\nWould you like to download another book? (yes/no): ";
                     libraryUser.DownloadRequest(userQuestion);
-                }
-                
+                }                
             }
             else
             {
-                //upload process
+                //start upload process
                 
                 book.StartUpload();
                 string uploadQue = "\nWould you like to upload another book? (yes/no): ";
                 libraryUser.UploadRequest(uploadQue);
             }
-
-            //userQuestion = "\nWould you like to download another book: ";
-
-            //book.DisplayBooks();
-
-            //Dictionary<string, Book> allBooks = book.GetAllBooks();
-            //int bookCount = allBooks.Count;
-            //if (bookCount > zero)
-            //{ libraryUser.DownloadRequest(userQuestion);
-            //}
             Console.ReadLine();
         }
     }

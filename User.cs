@@ -35,14 +35,12 @@ namespace LibraryManagement
             {
                 int titleIndex = 0;
                 int dateIndex = 1;
-                int processIndex = 2;
                 string[] splittedData = fetchedData[i].Split('@');
                 string bookTitle = splittedData[titleIndex];               
                 string dateProcess = splittedData[dateIndex];
                 string[] data = dateProcess.Split('%');
                 string downloadDate = data[0];
                 string process = data[1];
-                //Console.WriteLine(formattedSpace + (i + 1) + ". " + bookTitle + " on " + downloadDate);
                 Console.WriteLine(formattedSpace + (i+1) + ". "+ "You "+ process + " " + bookTitle + " on " + downloadDate);
             }
         }
@@ -86,7 +84,6 @@ namespace LibraryManagement
 
         public void SaveUserData(List<string> dataList)
         {
-            //User bookUser = new User();
             //saves a book at a time
             int userNameIndex = 0;
             int fileNameIndex = 1;
@@ -98,7 +95,7 @@ namespace LibraryManagement
             BinaryFormatter bf = new BinaryFormatter();
 
             //Check if the previous record exist
-            //deserialie the previous records and add the new record to it
+            //deserialize the previous records and add the new record to it
             try
             {
                 if (File.Exists(binFile))
@@ -200,7 +197,6 @@ namespace LibraryManagement
         {
             string download = "1";
             string upload = "2";
-            // || number !=  upload
             while (number != download)
             {
                 while (number != upload)
@@ -234,7 +230,6 @@ namespace LibraryManagement
         {
             Book book = new Book();
             string answer;
-            //string que = "\nWould you like to Upload a book (yes/no): ";
             do
             {
                  answer = GetUserResponse(question);
@@ -246,9 +241,8 @@ namespace LibraryManagement
                 else
                 {
                     Console.WriteLine("\nHope to see you next time, Bye!!!");
-                    //return;
+                   
                 }
-                //question = "\nWould you like to Upload another book (yes/no): ";
 
             } while (answer.ToLower() != userOption.no.ToString());
            
