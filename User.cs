@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace LibraryManagement
@@ -34,10 +35,15 @@ namespace LibraryManagement
             {
                 int titleIndex = 0;
                 int dateIndex = 1;
+                int processIndex = 2;
                 string[] splittedData = fetchedData[i].Split('@');
-                string bookTitle = splittedData[titleIndex];
-                string downloadDate = splittedData[dateIndex];
-                Console.WriteLine(formattedSpace + (i + 1) + ". " + bookTitle + " on " + downloadDate);
+                string bookTitle = splittedData[titleIndex];               
+                string dateProcess = splittedData[dateIndex];
+                string[] data = dateProcess.Split('%');
+                string downloadDate = data[0];
+                string process = data[1];
+                //Console.WriteLine(formattedSpace + (i + 1) + ". " + bookTitle + " on " + downloadDate);
+                Console.WriteLine(formattedSpace + (i+1) + ". "+ "You "+ process + " " + bookTitle + " on " + downloadDate);
             }
         }
         public string[] GetAllUsers()
@@ -76,7 +82,63 @@ namespace LibraryManagement
 
         }
 
-        public void UserRequest(string message)
+
+
+        public void SaveUserData(List<string> dataList)
+        {
+            //User bookUser = new User();
+            //saves a book at a time
+            int userNameIndex = 0;
+            int fileNameIndex = 1;
+            
+            List<string> userHistory = new List<string>();
+            string userName = dataList[userNameIndex];
+            string fileName = dataList[fileNameIndex];
+            string binFile = userName + ".bin";
+            BinaryFormatter bf = new BinaryFormatter();
+
+            //Check if the previous record exist
+            //deserialie the previous records and add the new record to it
+            try
+            {
+                if (File.Exists(binFile))
+                {
+                    try
+                    {
+                        userHistory = GetUserData(userName);
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                    finally
+                    {
+                        userHistory.Add(fileName);
+                        List<string> distinctData = userHistory.Distinct().ToList();
+                        FileStream file = File.Create(binFile);
+                        bf.Serialize(file, distinctData);
+                        file.Close();
+                    }
+                }
+                else
+                {
+                    List<string> newRecord = new List<string>
+                    {
+                        dataList[fileNameIndex]
+                    };
+                    FileStream file = File.Create(binFile);
+                    bf.Serialize(file, newRecord);
+                    file.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+
+        public void DownloadRequest(string message)
         {
             string response;
             do
@@ -91,7 +153,7 @@ namespace LibraryManagement
                     Console.WriteLine(ex.Message);
                 }
             } while (response != userOption.no.ToString());
-
+           
         }
 
         public string GetUserResponse(string message)
@@ -134,34 +196,64 @@ namespace LibraryManagement
         }
 
 
+        public string ValidateUserChoice(string number)
+        {
+            string download = "1";
+            string upload = "2";
+            // || number !=  upload
+            while (number != download)
+            {
+                while (number != upload)
+                {
+                    Console.Write("\nPlease enter a 1 or 2: ");
+                    string answer = Console.ReadLine();
+                    number = answer;
+                }
+                return number;
+            }
+            return number;
+
+        }
+
         public void DisplayResponse(string response)
         {
             Book book = new Book();
             if (response.ToLower() == userOption.yes.ToString())
             {
-                book.DisplayBooks();
+                //book.DisplayBooks();
+                book.twoMethod();
             }
             else
             {
-                UploadRequest();
+                string question = "\nWould you like to Upload a book? (yes/no): ";
+                UploadRequest(question);
             }
         }
 
-        public void UploadRequest()
+        public void UploadRequest( string question)
         {
             Book book = new Book();
-            string answer = GetUserResponse("\nWould you like to Upload a book: ");
+            string answer;
+            //string que = "\nWould you like to Upload a book (yes/no): ";
+            do
+            {
+                 answer = GetUserResponse(question);
+                if (answer.ToLower() == userOption.yes.ToString())
+                {
+                    book.StartUpload();
+                    question = "\nWould you like to Upload another book (yes/no): ";
+                }
+                else
+                {
+                    Console.WriteLine("\nHope to see you next time, Bye!!!");
+                    //return;
+                }
+                //question = "\nWould you like to Upload another book (yes/no): ";
 
-            if (answer == userOption.yes.ToString())
-            {
-                book.StartUpload();
-                Console.WriteLine("\nFile upload completed!!!");
-            }
-            else
-            {
-                Console.WriteLine("\nGood-Bye!!!");
-                return;
-            }
+            } while (answer.ToLower() != userOption.no.ToString());
+           
+                //Todo
+            //display history of uploads
         }
 
     }

@@ -66,7 +66,7 @@ namespace LibraryManagement
         }
 
 
-        public int ValidateResponse(int value, int count)
+        public int ValidateBookNumber(int value, int count)
         {
             int result;
             while (value <= 0 || value > count)
@@ -97,7 +97,7 @@ namespace LibraryManagement
                 //Uses the serial number to search the book               
                 try
                 {
-                    result = ValidateResponse(number, bookTitles.Count);
+                    result = ValidateBookNumber(number, bookTitles.Count);
                     int bookIndex = result - one;
                     string bookTitle = bookTitles[bookIndex];
                     ProcessDownload(books, bookTitle);
@@ -149,7 +149,8 @@ namespace LibraryManagement
                 else
                 {
                     Console.WriteLine(Program.formattedSpace + "\nThere are no matches for your request");
-                    DisplayBooks();
+                    //DisplayBooks();
+                    twoMethod();
                 }
             }
         }
@@ -170,15 +171,17 @@ namespace LibraryManagement
                 string user = Program.globalUser;
                 string datePattern = "dddd, dd MMMM yyyy hh:mm tt";
                 string downloadDate = DateTime.Now.ToString(datePattern);
-                DownloadFile(user, samplefileUrl, title + "@" + downloadDate);
-                Console.WriteLine(Program.formattedSpace + "\n" + books[title].title + " downloaded successfully, Please check your folder. ");
-                string displayMessage = "\n You have successfully downloaded the following books\n";
+                DownloadFile(user, samplefileUrl, title + "@" + downloadDate +"%downloaded");
+                Console.WriteLine(Program.formattedSpace + "\n" + books[title].title + " downloaded successfully, Please check your folder. \n");
+                //string displayMessage = "\n You have successfully downloaded the following books\n";
+                string displayMessage = "\n You have successfully performed the following \n";
                 libUser.DisplayUserHistory(user, displayMessage);
             }
             else
             {
                 Book book = new Book();
-                book.DisplayBooks();
+                //book.DisplayBooks();
+                book.twoMethod();
             }
         }
 
@@ -190,6 +193,7 @@ assessed 15/12/2022
         private void DownloadFile(string user, string fileUrl, string file)
         {
             //split the file to separate the book title from the date
+            User bookUser = new User();
             string[] newFile = file.Split('@');
             string filename = newFile[0] + ".pdf";
             //string downloadDate = newFile[1];
@@ -200,60 +204,9 @@ assessed 15/12/2022
                 user,
                 file
             };
-            SaveUserData(userData);
+            bookUser.SaveUserData(userData);
         }
-
-        public void SaveUserData(List<string> dataList)
-        {
-            User bookUser = new User();
-            //saves a book at a time
-            int userNameIndex = 0;
-            int fileNameIndex = 1;
-            List<string> userHistory = new List<string>();
-            string userName = dataList[userNameIndex];
-            string fileName = dataList[fileNameIndex];
-            string binFile = userName + ".bin";
-            BinaryFormatter bf = new BinaryFormatter();
-
-            //Check if the previous record exist
-            //deserialie the previous records and add the new record to it
-            try
-            {
-                if (File.Exists(binFile))
-                {
-                    try
-                    {
-                        userHistory = bookUser.GetUserData(userName);
-                    }
-                    catch (Exception)
-                    {
-                        throw;
-                    }
-                    finally
-                    {
-                        userHistory.Add(fileName);
-                        List<string> distinctData = userHistory.Distinct().ToList();
-                        FileStream file = File.Create(binFile);
-                        bf.Serialize(file, distinctData);
-                        file.Close();
-                    }
-                }
-                else
-                {
-                    List<string> newRecord = new List<string>
-                    {
-                        dataList[fileNameIndex]
-                    };
-                    FileStream file = File.Create(binFile);
-                    bf.Serialize(file, newRecord);
-                    file.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
+         
 
         public void DisplayBooks()
         {
@@ -272,19 +225,20 @@ assessed 15/12/2022
                 {
                     Console.WriteLine(Program.formattedSpace + (i + 1) + ". " + bookList[i].title + "   by " + bookList[i].author);
                 }
-                BorrowBook(allBooks);
+               // BorrowBook(allBooks);
             }
             else
             {
                 //Todo
                 Console.WriteLine(Program.formattedSpace + "\nThere are no books available right now.!");
-               libUser.UploadRequest();
+                string uploadQue = "\nWould you like to upload a book? (yes/no): ";
+                libUser.UploadRequest(uploadQue);
             }
         }
 
         public void StartUpload()
         {
-
+            User bookUser = new User();
             string filePath = "../../asset/books.txt";
             FileStream fileStream = File.OpenWrite(filePath);
             fileStream.Close();
@@ -295,6 +249,29 @@ assessed 15/12/2022
             StreamWriter writer = new StreamWriter(filePath, true);
             writer.WriteLine(content);
             writer.Close();
+            Console.WriteLine($"\n {title} by {author} upload completed!!!");
+
+            string user = Program.globalUser;
+            string datePattern = "dddd, dd MMMM yyyy hh:mm tt";
+            string downloadDate = DateTime.Now.ToString(datePattern);
+            string file = title + "@" + downloadDate + "%uploaded";
+
+            List<string> userData = new List<string>
+            {
+                user,
+                file
+            };
+            bookUser.SaveUserData(userData);
+
+        }
+
+
+        public void twoMethod()
+        {
+
+            Dictionary<string, Book> allBooks = GetAllBooks();
+            DisplayBooks();
+            BorrowBook(allBooks);
         }
     }
 }
