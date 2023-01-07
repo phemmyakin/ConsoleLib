@@ -17,13 +17,12 @@ namespace LibraryManagement
             string download = "1";
             const string nameRequest = "\nPlease enter your unique username:";
 
-            Console.WriteLine("\tWelcome to HOE public library. \nYou can download any book from the available list of books  or upload a book!");
-           
+            Console.WriteLine("\tWelcome to HOE public library. \nYou can download any book from the available list of books  or upload a book!");           
 
             string userName = libraryUser.ReadString(nameRequest).ToLower();
             globalUser = userName;
             string[] allUsers = libraryUser.GetAllUsers();
-            foreach (string user in allUsers)
+            foreach ( string user  in allUsers)
             {
                 if (userName == user)
                 {
@@ -32,6 +31,7 @@ namespace LibraryManagement
             }
             if (!userExist)
             {
+                //save the new user
                 Console.WriteLine(formattedSpace + "\nHello " + userName);
                 libraryUser.SaveUser(userName);
             }
@@ -42,7 +42,7 @@ namespace LibraryManagement
                 Console.WriteLine(formattedSpace + "\nWelcome back " + userName);
                 try
                 {
-                    //string displayMessage = "\nYou previosly downloaded the following books\n";
+                    //fetch user history here
                     string displayMessage = "\nYou previosly performed the following operations\n";
                     libraryUser.DisplayUserHistory(userName, displayMessage);
                 }
@@ -51,7 +51,7 @@ namespace LibraryManagement
                     Console.WriteLine(formattedSpace + "\nSorry, I could not fetch your records, the file could be missing/corrupted");
                 }
             }
-            Console.Write("\nTo download a book, Press 1 \nTo upload a book, Press 2: ");
+            Console.Write("\nTo download a book, Press 1 ; To upload a book, Press 2: ");
             string answer = Console.ReadLine();
             string option = libraryUser.ValidateUserChoice(answer);
             if (option == download)
@@ -63,7 +63,7 @@ namespace LibraryManagement
                 int bookCount = allBooks.Count;
                 if (bookCount > zero)
                 {
-                    book.BorrowBook(allBooks);
+                    book.SearchBook(allBooks);
                     userQuestion = "\nWould you like to download another book? (yes/no): ";
                     libraryUser.DownloadRequest(userQuestion);
                 }                

@@ -40,8 +40,8 @@ namespace LibraryManagement
                 string dateProcess = splittedData[dateIndex];
                 string[] data = dateProcess.Split('%');
                 string downloadDate = data[0];
-                string process = data[1];
-                Console.WriteLine(formattedSpace + (i+1) + ". "+ "You "+ process + " " + bookTitle + " on " + downloadDate);
+                string actionPerformed = data[1];
+                Console.WriteLine(formattedSpace + (i+1) + ". "+ "You "+ actionPerformed + " " + bookTitle + " on " + downloadDate);
             }
         }
         public string[] GetAllUsers()
@@ -197,18 +197,13 @@ namespace LibraryManagement
         {
             string download = "1";
             string upload = "2";
-            while (number != download)
+            while (number != download && number != upload)
             {
-                while (number != upload)
-                {
-                    Console.Write("\nPlease enter a 1 or 2: ");
-                    string answer = Console.ReadLine();
-                    number = answer;
-                }
-                return number;
+                Console.Write("\nPlease enter a 1 or 2: ");
+                string answer = Console.ReadLine();
+                number = answer;
             }
             return number;
-
         }
 
         public void DisplayResponse(string response)
@@ -216,8 +211,7 @@ namespace LibraryManagement
             Book book = new Book();
             if (response.ToLower() == userOption.yes.ToString())
             {
-                //book.DisplayBooks();
-                book.twoMethod();
+                book.BookDisplaySearch();
             }
             else
             {
@@ -246,8 +240,6 @@ namespace LibraryManagement
 
             } while (answer.ToLower() != userOption.no.ToString());
            
-                //Todo
-            //display history of uploads
         }
 
     }

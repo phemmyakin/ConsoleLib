@@ -81,7 +81,7 @@ namespace LibraryManagement
         }
 
 
-        public void BorrowBook(Dictionary<string, Book> books)
+        public void SearchBook(Dictionary<string, Book> books)
         {
             int number = 0;
             int zero = 0;
@@ -105,7 +105,7 @@ namespace LibraryManagement
                 catch (Exception)
                 {
                     Console.WriteLine("\nYou have entered an invalid input!!!");
-                    BorrowBook(books);
+                    SearchBook(books);
                 }
             }
             else
@@ -138,7 +138,7 @@ namespace LibraryManagement
                             matchedBook.Add(books[matchingRecords[i]].title, newBook);
                         }
                         //user can only download one book at a time,
-                        BorrowBook(matchedBook);
+                        SearchBook(matchedBook);
                     }
                     else
                     {
@@ -149,8 +149,7 @@ namespace LibraryManagement
                 else
                 {
                     Console.WriteLine(Program.formattedSpace + "\nThere are no matches for your request");
-                    //DisplayBooks();
-                    twoMethod();
+                    BookDisplaySearch();
                 }
             }
         }
@@ -178,8 +177,7 @@ namespace LibraryManagement
             else
             {
                 Book book = new Book();
-                //book.DisplayBooks();
-                book.twoMethod();
+                book.BookDisplaySearch();
             }
         }
 
@@ -223,7 +221,6 @@ assessed 15/12/2022
                 {
                     Console.WriteLine(Program.formattedSpace + (i + 1) + ". " + bookList[i].title + "   by " + bookList[i].author);
                 }
-               // BorrowBook(allBooks);
             }
             else
             {
@@ -263,12 +260,11 @@ assessed 15/12/2022
         }
 
 
-        public void twoMethod()
+        public void BookDisplaySearch()
         {
-
             Dictionary<string, Book> allBooks = GetAllBooks();
             DisplayBooks();
-            BorrowBook(allBooks);
+            SearchBook(allBooks);
         }
     }
 }
