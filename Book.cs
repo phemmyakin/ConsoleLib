@@ -211,7 +211,7 @@ assessed 15/12/2022
             allBooks = this.GetAllBooks();
             if (allBooks.Count > 0)
             {
-                Console.WriteLine(Program.formattedSpace + "\nThese are the available books with authors, you can download one book at a time\n");
+                Console.WriteLine(Program.formattedSpace + "\nThese are the available books with authors from A to Z, you can download one book at a time\n");
                 Console.WriteLine(Program.formattedSpace + "S/N : BOOK TITLE\n");
 
                 //Order in ascending 
